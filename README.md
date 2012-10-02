@@ -52,9 +52,11 @@ The mounts parameter assumes that you want to keep your ```dfs.datanode.data.dir
 ```puppet
 include cdh4::hadoop::master
 ```
+This installs and starts up the NameNode, ResourceManager and HistoryServer.
 
 ## For your Hadoop worker DataNodes:
 ```puppet
 include cdh4::hadoop::worker
 ```
+This installs and starts up the DataNode and NodeManager.
 
