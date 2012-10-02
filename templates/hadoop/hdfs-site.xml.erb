@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+  <property>
+   <name>dfs.permissions.superusergroup</name>
+   <value>hadoop</value>
+  </property>
+  
+  <property>
+   <name>dfs.namenode.name.dir</name>
+   <value><%= (dfs_name_dir.class == Array) ? dfs_name_dir.join(',') : dfs_name_dir %></value>
+  </property>
+  <property>
+   <name>dfs.datanode.data.dir</name>
+   <value><%= mounts.collect { |mount| mount + "/" + dfs_data_path }.join(',') %></value>
+  </property>
+  <property>
+   <name>dfs.block.size</name>
+   <value><%= dfs_block_size %></value>
+  </property>
+</configuration>
