@@ -29,7 +29,7 @@ git commit -m 'Adding modules/cdh4 as a git submodule.'
 
 # Usage
 
-## For all hadoop nodes:
+## For all Hadoop nodes:
 ```puppet
 include cdh4
 class { "cdh4::hadoop::config":
