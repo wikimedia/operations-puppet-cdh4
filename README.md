@@ -14,10 +14,23 @@ The cdh4::hadoop::master and cdh4::hadoop::worker classes will
 manage hadoop services.
 
 
+# Installation:
+Clone (or copy) this repository into your puppet modules/cdh4 directory:
+```bash
+git clone git://github.com/wmf-analytics/cloudera-cdh4-puppet.git modules/cdh4
+```
+
+Or you could also use a git submodule:
+```bash
+git submodule add git://github.com/wmf-analytics/cloudera-cdh4-puppet.git modules/cdh4
+git commit -m 'Adding modules/cdh4 as a git submodule.'
+```
+
+
 # Usage
 
 ## For all hadoop nodes:
-<pre>
+```puppet
 include cdh4
 class { "cdh4::hadoop::config":
 	namenode_hostname => "namenode.hostname.org",
@@ -28,14 +41,15 @@ class { "cdh4::hadoop::config":
 	],
 	dfs_name_dir      => ["/var/lib/hadoop/name", "/mnt/hadoop_name"],
 }
-</pre>
+```
 
 ## For your Hadoop master NameNode:
-<pre>
+```puppet
 include cdh4::hadoop::master
-</pre>
+```
 
 ## For your Hadoop worker DataNodes:
+```puppet
 include cdh4::hadoop::worker
-</pre>
+```
 
