@@ -42,6 +42,11 @@ class { "cdh4::hadoop::config":
 	dfs_name_dir      => ["/var/lib/hadoop/name", "/mnt/hadoop_name"],
 }
 ```
+This will ensure that CDH4 client packages are installed, and that
+Hadoop related config files are in place with proper settings.
+
+The mounts parameter assumes that you want to keep your ```dfs.datanode.data.dir```, ```yarn.nodemanager.local-dirs```, and ```yarn.nodemanager.log-dirs``` all as subdirectories in each of the mount points provided.
+
 
 ## For your Hadoop master NameNode:
 ```puppet
