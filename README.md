@@ -9,9 +9,8 @@ Note that, in order for this module to work, you will have to ensure that:
 * Sun JRE version 6 or greater is installed
 * Your package manager is configured with a repository containing the
   Cloudera 4 packages, OR you manually include ```cdh4::apt_source```.
-  
 
-The cdh4::hadoop::master and cdh4::hadoop::worker classes will
+The ```cdh4::hadoop::master``` and ```cdh4::hadoop::worker``` classes will
 manage hadoop services.
 
 
