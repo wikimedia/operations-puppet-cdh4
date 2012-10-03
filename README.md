@@ -6,9 +6,10 @@ _NOTE_: This module currently only supports YARN, and not MapReduce version 1.
 # Description
 Installs HDFS, YARN MapReduce, hive, hbase, pig, sqoop and zookeeper.
 Note that, in order for this module to work, you will have to ensure that:
-* SUN jre version 6 or greater is installed
+* Sun JRE version 6 or greater is installed
 * Your package manager is configured with a repository containing the
-  Cloudera 4 packages, OR you manually include cdh4::apt_source.
+  Cloudera 4 packages, OR you manually include ```cdh4::apt_source```.
+  
 
 The cdh4::hadoop::master and cdh4::hadoop::worker classes will
 manage hadoop services.
@@ -26,11 +27,14 @@ git submodule add git://github.com/wmf-analytics/cloudera-cdh4-puppet.git module
 git commit -m 'Adding modules/cdh4 as a git submodule.'
 ```
 
+This has only been tested on Ubuntu 12.04 LTS.  But, since Cloudera keeps their package names consistent between Linuxes, I don't see any reason why this wouldn't work on any Linux that has Cloudera Packages available.  The ```cdh4::apt_source``` will make the packages available from Cloudera's apt repository.  If you are installing on a different Linux, then you'll need to make sure that the packages are available somehow.
 
 # Usage
 
 ## For all Hadoop nodes:
 ```puppet
+
+
 include cdh4
 class { "cdh4::hadoop::config":
 	namenode_hostname => "namenode.hostname.org",
