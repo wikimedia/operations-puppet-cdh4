@@ -23,6 +23,8 @@
 #   $yarn_local_path   - path relative to JBOD mount point for yarn local directories.
 #   $yarn_logs_path    - path relative to JBOD mount point for yarn log directories.
 #   $dfs_block_size    - HDFS block size in bytes.  Default 64MB.
+#   $enable_intermediate_compression - If true, intermediate MapReduce data will be compressed with Snappy.
+#   $enable_final_compession         - If true, Final output of MapReduce jobs will be compressed with Snappy.
 #
 # TODO:
 #   - Change cluster (conf) name?  (use alternatives?)
@@ -32,11 +34,13 @@ class cdh4::hadoop::config(
 	$mounts,
 	$namenode_hostname,
 	$dfs_name_dir,
-	$config_directory = '/etc/hadoop/conf',
-	$dfs_data_path    = "hdfs/dn",
-	$yarn_local_path  = 'yarn/local',
-	$yarn_logs_path   = 'yarn/logs',
-	$dfs_block_size   = 67108864, # 64MB default
+	$config_directory                = '/etc/hadoop/conf',
+	$dfs_data_path                   = 'hdfs/dn',
+	$yarn_local_path                 = 'yarn/local',
+	$yarn_logs_path                  = 'yarn/logs',
+	$dfs_block_size                  = 67108864, # 64MB default
+	$enable_intermediate_compression = true,
+	$enable_final_compession         = false
 ) {
 	require cdh4::hadoop
 
