@@ -20,4 +20,25 @@
    <value><%= namenode_hostname %>:1988</value>
   </property>
 
+<% if @map_tasks_maximum -%>
+  <property>
+   <name>mapreduce.tasktracker.map.tasks.maximum</name>
+   <value><%= map_tasks_maximum %></value>
+  </property>
+<% end -%>
+
+<% if @reduce_tasks_maximum -%>
+  <property>
+   <name>mapreduce.tasktracker.reduce.tasks.maximum</name>
+   <value><%= reduce_tasks_maximum %></value>
+  </property>
+<% end -%>
+
+<% if @map_memory_mb -%>
+  <property>
+   <name>mapreduce.map.memory.mb</name>
+   <value><%= map_memory_mb %></value>
+  </property>
+<% end -%>
+
 </configuration>

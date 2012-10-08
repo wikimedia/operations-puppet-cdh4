@@ -40,7 +40,11 @@ class cdh4::hadoop::config(
 	$yarn_logs_path                  = 'yarn/logs',
 	$dfs_block_size                  = 67108864, # 64MB default
 	$enable_intermediate_compression = true,
-	$enable_final_compession         = false
+	$enable_final_compession         = false,
+	$map_tasks_maximum               = undef,
+	$reduce_tasks_maximum            = undef,
+	$map_memory_mb                   = undef,
+	$io_file_buffer_size             = undef
 ) {
 	require cdh4::hadoop
 
