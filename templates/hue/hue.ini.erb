@@ -206,7 +206,12 @@
 
       # Defaults to $HADOOP_CONF_DIR or /etc/hadoop/conf
       ## hadoop_conf_dir=/etc/hadoop/conf
-
+<% if false %>
+<% 
+   # TODO: make this less hacky.  We aren't using MR1,
+   # so I am just excluding this section of the config
+   # from the rendered template. 
+%>
   # Configuration for MapReduce 0.20 JobTracker (MR1)
   # ------------------------------------------------------------------------
   [[mapred_clusters]]
@@ -235,6 +240,7 @@
 
       # Defaults to $HADOOP_CONF_DIR or /etc/hadoop/conf
       ## hadoop_conf_dir=/etc/hadoop/conf
+<% end -%>
 
   # Configuration for YARN (MR2)
   # ------------------------------------------------------------------------
