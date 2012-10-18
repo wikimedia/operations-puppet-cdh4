@@ -18,7 +18,7 @@
 
   # Set this to a random string, the longer the better.
   # This is used for secure hashing in the session store.
-  secret_key=aijha3ioughoia2ngbvoihgoiwhi3thfgv8o4hga;oi24hgf;oigh4;boi2h3afielahgoiahgi2j3htiohf90vho4jqoi3t4hg902hvi
+  secret_key=<%= @secret_key ? secret_key : "" %>
 
   # Webserver listens on this address and port
   http_host=0.0.0.0
@@ -185,7 +185,7 @@
 
     [[[default]]]
       # Enter the filesystem uri
-      fs_defaultfs=hdfs://<%= namenode_hostname %>/
+      fs_defaultfs=hdfs://<%= scope.lookupvar("analytics::hadoop::config::namenode_hostname") %>/
 
       # Change this if your HDFS cluster is Kerberos-secured
       ## security_enabled=false
@@ -193,7 +193,7 @@
       # Use WebHdfs/HttpFs as the communication mechanism.
       # This should be the web service root URL, such as
       # http://namenode:50070/webhdfs/v1
-      webhdfs_url=http://<%= namenode_hostname %>:50070/webhdfs/v1/
+      webhdfs_url=http://<%= scope.lookupvar("analytics::hadoop::config::namenode_hostname") %>:50070/webhdfs/v1/
 
       # Settings about this HDFS cluster. If you install HDFS in a
       # different location, you need to set the following.
@@ -213,7 +213,7 @@
 
     [[[default]]]
       # Enter the host on which you are running the Hadoop JobTracker
-      jobtracker_host=<%= namenode_hostname %>
+      jobtracker_host=<%= scope.lookupvar("analytics::hadoop::config::namenode_hostname") %>
       # The port where the JobTracker IPC listens on
       jobtracker_port=8021
       # Thrift plug-in port for the JobTracker
@@ -242,7 +242,7 @@
 
     [[[default]]]
       # Enter the host on which you are running the ResourceManager
-      resourcemanager_host=<%= namenode_hostname %>
+      resourcemanager_host=<%= scope.lookupvar("analytics::hadoop::config::namenode_hostname") %>
       # The port where the ResourceManager IPC listens on
       resourcemanager_port=8032
       # Whether to submit jobs to this cluster
