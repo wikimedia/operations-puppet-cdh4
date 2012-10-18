@@ -63,11 +63,14 @@ class cdh4::hadoop::config(
 	}
 
 	file { "$config_directory/yarn-site.xml":
-		content => template("cdh4/hadoop/yarn-site.xml.erb")
+		content => template("cdh4/hadoop/yarn-site.xml.erb"),
 	}
 
-	# only need this to set framework.name
 	file { "$config_directory/mapred-site.xml":
-		content => template("cdh4/hadoop/mapred-site.xml.erb")
+		content => template("cdh4/hadoop/mapred-site.xml.erb"),
+	}
+
+	file { "$config_directory/httpfs-site.xml":
+		content => template("cdh4/hadoop/httpfs-site.xml.erb"),
 	}
 }
