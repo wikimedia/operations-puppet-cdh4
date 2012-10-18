@@ -9,7 +9,7 @@ class cdh4 {
 	include zookeeper
 	include pig
 	include sqoop
-	# include oozie
+	include oozie
 }
 
 
