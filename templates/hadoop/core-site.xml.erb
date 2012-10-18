@@ -17,4 +17,19 @@
   </property>
 <% end -%>
 
+<% if enable_webhdfs -%>
+<% # NOTE: There might be a better way to
+   # conditionally set this rather than relying
+   # the enable_webhdfs setting.  This will do for now.
+-%>
+  <!-- Hue WebHDFS proxy user setting -->
+  <property>
+    <name>hadoop.proxyuser.hue.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.hue.groups</name>
+    <value>*</value>
+  </property>
+<% end -%>
 </configuration>
