@@ -34,18 +34,21 @@ class cdh4::hadoop::config(
 	$mounts,
 	$namenode_hostname,
 	$dfs_name_dir,
-	$config_directory                = '/etc/hadoop/conf',
-	$dfs_data_path                   = 'hdfs/dn',
-	$yarn_local_path                 = 'yarn/local',
-	$yarn_logs_path                  = 'yarn/logs',
-	$dfs_block_size                  = 67108864, # 64MB default
-	$enable_webhdfs                  = true,
-	$enable_intermediate_compression = true,
-	$enable_final_compession         = false,
-	$map_tasks_maximum               = undef,
-	$reduce_tasks_maximum            = undef,
-	$map_memory_mb                   = undef,
-	$io_file_buffer_size             = undef
+	$config_directory                  = '/etc/hadoop/conf',
+	$dfs_data_path                     = 'hdfs/dn',
+	$yarn_local_path                   = 'yarn/local',
+	$yarn_logs_path                    = 'yarn/logs',
+	$dfs_block_size                    = 67108864, # 64MB default
+	$enable_webhdfs                    = true,
+	$enable_intermediate_compression   = true,
+	$enable_final_compession           = false,
+	$io_file_buffer_size               = undef,
+	$map_tasks_maximum                 = undef,
+	$reduce_tasks_maximum              = undef,
+	$reduce_parallel_copies            = undef,
+	$map_memory_mb                     = undef,
+	$mapreduce_job_reuse_jvm_num_tasks = undef,
+	$mapreduce_child_java_opts         = undef
 ) {
 	require cdh4::hadoop
 
