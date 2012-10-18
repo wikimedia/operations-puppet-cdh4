@@ -387,14 +387,14 @@
 
     # Define and configure a new shell type "flume"
     # ------------------------------------------------------------------------
-    [[[ flume ]]]
-      nice_name = "Flume Shell"
-      command = "/usr/bin/flume shell"
-      help = "The command-line Flume client interface."
-
-      [[[[ environment ]]]]
-	# You can specify environment variables for the Flume shell
-	# in this section.
+    # [[[ flume ]]]
+    #   nice_name = "Flume Shell"
+    #   command = "/usr/bin/flume shell"
+    #   help = "The command-line Flume client interface."
+    # 
+    #   [[[[ environment ]]]]
+    # You can specify environment variables for the Flume shell
+    # in this section.
 
     # Define and configure a new shell type "pig"
     # ------------------------------------------------------------------------
@@ -404,12 +404,12 @@
       help = "The command-line interpreter for Pig"
 
       [[[[ environment ]]]]
-	# You can specify environment variables for the Pig shell
-	# in this section. Note that JAVA_HOME must be configured
-	# for the Pig shell to run.
+      # You can specify environment variables for the Pig shell
+      # in this section. Note that JAVA_HOME must be configured
+      # for the Pig shell to run.
 
-	[[[[[ JAVA_HOME ]]]]]
-	  value = "/usr/lib/jvm/java-6-sun"
+      [[[[[ JAVA_HOME ]]]]]
+        value = "/usr/lib/jvm/java-6-sun"
 
     # Define and configure a new shell type "hbase"
     # ------------------------------------------------------------------------
@@ -419,8 +419,8 @@
       help = "The command-line HBase client interface."
 
       [[[[ environment ]]]]
-	# You can configure environment variables for the HBase shell
-	# in this section.
+      # You can configure environment variables for the HBase shell
+      # in this section.
 
 
 ###########################################################################
