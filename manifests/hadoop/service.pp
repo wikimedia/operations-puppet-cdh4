@@ -79,7 +79,7 @@ class cdh4::hadoop::service::historyserver {
 		ensure    => "running",
 		enable    => true,
 		alias     => "historyserver",
-		subscribe => File["$cdh4::hadoop::config::configdirectory/mapred-site.xml"],
+		subscribe => File["$cdh4::hadoop::config::config_directory/mapred-site.xml"],
 	}
 }
 
