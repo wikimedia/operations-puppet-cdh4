@@ -7,6 +7,6 @@ class cdh4::hue::config($secret_key = undef) {
 	file { "/etc/hue/hue.ini":
 		content => template("cdh4/hue/hue.ini.erb"),
 		owner   => "root",
-		mode    => "755",
+		mode    => "0644",
 	}
 }
