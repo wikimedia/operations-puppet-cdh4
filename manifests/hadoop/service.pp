@@ -9,6 +9,7 @@
 
 class cdh4::hadoop::service::namenode {
 	require cdh4::hadoop::install::namenode
+	require cdh4::hadoop::config
 	
 	service { "hadoop-hdfs-namenode": 
 		ensure => "running",
@@ -19,7 +20,8 @@ class cdh4::hadoop::service::namenode {
 
 class cdh4::hadoop::service::secondarynamenode {
 	require cdh4::hadoop::install::secondarynamenode
-
+	require cdh4::hadoop::config
+	
 	service { "hadoop-hdfs-secondarynamenode": 
 		ensure => "running",
 		enable => true,
@@ -29,6 +31,7 @@ class cdh4::hadoop::service::secondarynamenode {
 
 class cdh4::hadoop::service::datanode {
 	require cdh4::hadoop::install::datanode
+	require cdh4::hadoop::config
 
 	# install datanode daemon package
 	service { "hadoop-hdfs-datanode": 
@@ -44,6 +47,7 @@ class cdh4::hadoop::service::datanode {
 
 class cdh4::hadoop::service::resourcemanager {
 	require cdh4::hadoop::install::resourcemanager
+	require cdh4::hadoop::config
 
 	# ResourceManager (YARN JobTracker)
 	service { "hadoop-yarn-resourcemanager":
@@ -57,6 +61,7 @@ class cdh4::hadoop::service::resourcemanager {
 class cdh4::hadoop::service::nodemanager {
 	# nodemanagers are also datanodes
 	require cdh4::hadoop::install::nodemanager
+	require cdh4::hadoop::config
 
 	# NodeManager (YARN TaskTracker)
 	service { "hadoop-yarn-nodemanager":
@@ -68,16 +73,19 @@ class cdh4::hadoop::service::nodemanager {
 
 class cdh4::hadoop::service::historyserver {
 	require cdh4::hadoop::install::historyserver
+	require cdh4::hadoop::config
 
 	service { "hadoop-mapreduce-historyserver":
-		ensure => "running",
-		enable => true,
-		alias  => "historyserver",
+		ensure    => "running",
+		enable    => true,
+		alias     => "historyserver",
+		subscribe => File["$cdh4::hadoop::config::configdirectory/mapred-site.xml"],
 	}
 }
 
 class cdh4::hadoop::service::proxyserver {
 	require cdh4::hadoop::install::proxyserver
+	require cdh4::hadoop::config
 
 	# install proxyserver daemon package
 	service { "hadoop-yarn-proxyserver":
