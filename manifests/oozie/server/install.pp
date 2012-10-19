@@ -5,7 +5,7 @@ class cdh4::oozie::server::install {
 		ensure => installed,
 	}
 
-	# Extract and install Oozie ShareLib into Hadoop.
+	# Extract and install Oozie ShareLib into HDFS.
 	# This puppet module only supports YARN.
 	# TODO:  Write generic hadoop::fs and hadoop::file
 	# puppet resource types and uses these.
@@ -18,6 +18,8 @@ class cdh4::oozie::server::install {
 			sudo -u hdfs hadoop fs -chown oozie:hadoop /user/oozie && \
 			sudo -u oozie hadoop fs -put share /user/oozie/share   && \
 			cd /root && sudo rm -rf /tmp/ooziesharelib",
-		unless => "hadoop fs -ls /user/oozie/share 2&>1 /dev/null",
+		# don't run this command if /user/oozie/share already exists in HDFS.
+		unless  => "hadoop fs -ls /user/oozie | grep -q /user/oozie/share",
+		require => [Package["oozie"], Class["cdh4::hadoop"]],
 	}
 }
