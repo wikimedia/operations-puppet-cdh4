@@ -410,9 +410,6 @@
       # in this section. Note that JAVA_HOME must be configured
       # for the Pig shell to run.
 
-      [[[[[ JAVA_HOME ]]]]]
-        value = "/usr/lib/jvm/java-6-sun"
-
     # Define and configure a new shell type "hbase"
     # ------------------------------------------------------------------------
     [[[ hbase ]]]
@@ -422,6 +419,17 @@
 
       [[[[ environment ]]]]
       # You can configure environment variables for the HBase shell
+      # in this section.
+    
+    # Define and configure a new shell type "hbase"
+    # ------------------------------------------------------------------------
+    [[[ hive ]]]
+      nice_name = "Hive Shell"
+      command = "/usr/bin/hive"
+      help = "The command-line Hive client interface."
+
+      [[[[ environment ]]]]
+      # You can configure environment variables for the Hive shell
       # in this section.
 
 
