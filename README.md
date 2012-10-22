@@ -8,6 +8,7 @@ Installs HDFS, YARN MapReduce, hive, hbase, pig, sqoop, zookeeper, oozie and hue
 * Sun JRE version 6 or greater is installed
 * Your package manager is configured with a repository containing the
   Cloudera 4 packages.  (See examples/cloudera_apt.pp)
+
 The ```cdh4::hadoop::master``` and ```cdh4::hadoop::worker``` classes will
 manage hadoop services.
 
