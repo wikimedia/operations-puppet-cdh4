@@ -25,7 +25,7 @@ class cdh4::hadoop::master inherits cdh4::hadoop {
 # == Class cdh4::hadoop::worker
 #
 # A Hadoop worker node is the DataNode and NodeManager.
-class cdh4::hadoop::worker($mapreduce_framework_name = 'yarn') inherits cdh4::hadoop {
+class cdh4::hadoop::worker inherits cdh4::hadoop {
 	include cdh4::hadoop::service::datanode
 	include cdh4::hadoop::service::nodemanager
 }
