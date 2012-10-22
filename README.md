@@ -4,12 +4,10 @@ _NOTE_: This module currently only supports YARN, and not MapReduce version 1.
 
 
 # Description
-Installs HDFS, YARN MapReduce, hive, hbase, pig, sqoop and zookeeper.
-Note that, in order for this module to work, you will have to ensure that:
+Installs HDFS, YARN MapReduce, hive, hbase, pig, sqoop, zookeeper, oozie and hue.  Note that, in order for this module to work, you will have to ensure that:
 * Sun JRE version 6 or greater is installed
 * Your package manager is configured with a repository containing the
-  Cloudera 4 packages, OR you manually include ```cdh4::apt_source```.
-
+  Cloudera 4 packages.  (See examples/cloudera_apt.pp)
 The ```cdh4::hadoop::master``` and ```cdh4::hadoop::worker``` classes will
 manage hadoop services.
 
