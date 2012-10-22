@@ -30,6 +30,7 @@
 #   - Change cluster (conf) name?  (use alternatives?)
 #   - Manage each hadoop directory in mounts in puppet?
 #   - Add parameters for historyserver, proxyserver, resourcemanager hostnames, etc.
+#   - Set default map/reduce tasks automatically based on node stats.
 class cdh4::hadoop::config(
 	$mounts,
 	$namenode_hostname,
@@ -50,27 +51,28 @@ class cdh4::hadoop::config(
 	$mapreduce_job_reuse_jvm_num_tasks = undef,
 	$mapreduce_child_java_opts         = undef
 ) {
-	require cdh4::hadoop
-
-	# TODO: set default map/reduce tasks
-	# automatically based on node stats.
 	file { "$config_directory/core-site.xml":
 		content => template("cdh4/hadoop/core-site.xml.erb"),
+		require => Package["hadoop-client"],
 	}
 
 	file { "$config_directory/hdfs-site.xml":
 		content => template("cdh4/hadoop/hdfs-site.xml.erb"),
+		require => Package["hadoop-client"],
 	}
 
 	file { "$config_directory/yarn-site.xml":
 		content => template("cdh4/hadoop/yarn-site.xml.erb"),
+		require => Package["hadoop-client"],
 	}
 
 	file { "$config_directory/mapred-site.xml":
 		content => template("cdh4/hadoop/mapred-site.xml.erb"),
+		require => Package["hadoop-client"],
 	}
 
 	file { "$config_directory/httpfs-site.xml":
 		content => template("cdh4/hadoop/httpfs-site.xml.erb"),
+		require => Package["hadoop-client"],
 	}
 }
