@@ -1,14 +1,16 @@
-class analytics_base {
+class analytics::base {
 	require cdh4::apt_source
 	# install common cdh4 packages and config
 	include cdh4 
 	# hadoop config is common to all nodes
 	include analytics::hadoop::config
+	# zookeeper config is common to all nodes
+	include analytics::zookeeper::config
 }
 
 
 
-class analytics::master inherits analytics_base {
+class analytics::master inherits analytics::base {
 	# hadoop master (namenode, etc.)
 	include cdh4::hadoop::master
 	# oozier server
@@ -28,6 +30,9 @@ class analytics::worker inherits analytics::base {
 	include cdh4::hadoop::worker
 }
 
+class analyitcs::zookeeper inherits analytics::base {
+	include cdh4analytics::zookeeper::server
+}
 
 
 
@@ -126,6 +131,7 @@ class analytics::oozie::server {
 # This requires that a MySQL server is running
 # on this node.  This will create the hive
 # MySQL database and user.
+#
 class analytics::hive::server {
 	require analytics::packages::mysql_server, analytics::packages::mysql_java
 
@@ -160,4 +166,28 @@ class analytics::hive::server {
 		require       => [File["/usr/lib/hive/lib/mysql.jar"], Exec["hive_mysql_create_database"], Exec["hive_mysql_create_user"]],
 		subscribe     => [Exec["hive_mysql_create_database"], Exec["hive_mysql_create_user"]]
 	}
+}
+
+
+# == Class analytics::zookeeper::config
+# Sets up zoo.cfg with the proper zookeeper server list.
+#
+class analytics::zookeeper::config {
+	$zookeeper_hosts = [
+		"zookeeper1",
+		"zookeeper2",
+		"zookeeper3"
+	]
+
+	class { "cdh4::zookeeper::config":
+		zookeeper_hosts => $zookeeper_hosts,
+	}
+}
+
+# == Class analytics::zookeeper::server
+# Installs and configures a zookeeper server.
+#
+class analytics::zookeeper::server {
+	require analytics::zookeeper::config
+	include cdh4::zookeeper::server
 }

@@ -5,6 +5,10 @@ node hadoop_master {
 	include analytics::master
 }
 
-node /hadoop_workerp[0-9][0-9]/ {
+node /hadoop_worker[0-9][0-9]/ {
 	include analytics::worker
+}
+
+node zookeeper1,zookeeper2,zookeeper3 {
+	include analytics::zookeeper
 }
