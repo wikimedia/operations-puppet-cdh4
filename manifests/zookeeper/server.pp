@@ -8,7 +8,7 @@ class cdh4::zookeeper::server {
 	exec { "zookeeper-server-initialize":
 		command => "/usr/bin/zookeeper-server-initialize --myid=${myid}",
 		unless  => "/usr/bin/test -f $cdh4::zookeeper::config::data_dir/myid",
-		user    => "root",
+		user    => "zookeeper",
 		require => Class["cdh4::zookeeper::config"],
 	}
 
