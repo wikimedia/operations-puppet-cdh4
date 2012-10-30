@@ -19,7 +19,7 @@ class cdh4::hive::server::install {
 			sudo -u hdfs hadoop fs -chown hive:hadoop /user/hive/warehouse    && \
 			sudo -u hdfs hadoop fs -chmod 1777        /user/hive/warehouse    &&",
 		# don't run this command if /user/oozie/share already exists in HDFS.
-		unless  => "hadoop fs -ls /user/hive/warehouse | grep -q /user/hive/warehouse",
+		unless  => "hadoop fs -ls -d /user/hive/warehouse | grep -q /user/hive/warehouse",
 		require => [Package["hive"], Class["cdh4::hadoop"]],
 	}
 }
