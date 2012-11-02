@@ -64,4 +64,11 @@
   </property>
 <% end -%>
 
+  <!-- Hue gets confused if mapred.job.tracker is not set,
+       even though we are using YARN and the jobtracker is not running. -->
+  <property>
+    <name>mapred.job.tracker</name>
+    <value>localhost:8021</value>
+  </property>
+
 </configuration>
