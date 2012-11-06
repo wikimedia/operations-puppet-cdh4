@@ -24,7 +24,7 @@
    # conditionally set this rather than relying
    # the enable_webhdfs setting.  This will do for now.
 -%>
-  <!-- Hue WebHDFS proxy user setting -->
+  <!-- Hue WebHDFS proxy user -->
   <property>
     <name>hadoop.proxyuser.hue.hosts</name>
     <value>*</value>
@@ -33,5 +33,16 @@
     <name>hadoop.proxyuser.hue.groups</name>
     <value>*</value>
   </property>
+
+  <!-- Oozie WebHDFS proxy user -->
+  <property>
+    <name>hadoop.proxyuser.oozie.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.oozie.groups</name>
+    <value>*</value>
+  </property>
 <% end -%>
+
 </configuration>

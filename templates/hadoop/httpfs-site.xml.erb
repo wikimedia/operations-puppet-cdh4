@@ -6,11 +6,11 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
-  <% if enable_webhdfs -%>
-  <% # NOTE: There might be a better way to
-     # conditionally set this rather than relying
-     # the enable_webhdfs setting.  This will do for now.
-  -%>
+<% if enable_webhdfs -%>
+<% # NOTE: There might be a better way to
+   # conditionally set this rather than relying
+   # the enable_webhdfs setting.  This will do for now.
+-%>
   <!-- Hue HttpFS proxy user setting -->
   <property>
     <name>httpfs.proxyuser.hue.hosts</name>
@@ -18,6 +18,16 @@
   </property>
   <property>
     <name>httpfs.proxyuser.hue.groups</name>
+    <value>*</value>
+  </property>
+  
+  <!-- Oozie HttpFS proxy user -->
+  <property>
+    <name>httpfs.proxyuser.oozie.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>httpfs.proxyuser.oozie.groups</name>
     <value>*</value>
   </property>
 <% end -%>
