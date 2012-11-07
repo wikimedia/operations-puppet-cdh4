@@ -26,6 +26,16 @@ class analytics::oozie::server {
 		user    => 'root',
 	}
 
+	# The WF_JOBS proto_action_conf is TEXT type by default.
+	# This isn't large enough for things that hue submits.
+	# Change it to MEDIUMTEXT.
+	exec { "oozie_alter_WF_JOBS":
+		command => "/usr/bin/mysql -e 'ALTER TABLE oozie.WF_JOBS CHANGE proto_action_conf proto_action_conf MEDIUMTEXT;'",
+		unless  => "/usr/bin/mysql -e 'SHOW CREATE TABLE oozie.WF_JOBS\G' | grep proto_action_conf | grep -qi mediumtext",
+		user    => "root",
+		require => Exec["oozie_mysql_create_database"],
+	}
+
 	class { "cdh4::oozie::server":
 		jdbc_driver       => "com.mysql.jdbc.Driver",
 		jdbc_url          => "jdbc:mysql://localhost:3306/$oozie_db_name",
