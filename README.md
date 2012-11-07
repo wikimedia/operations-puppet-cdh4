@@ -1,3 +1,5 @@
+# puppet-cdh4
+
 Puppet module to install and manage components of a YARN installation of
 Cloudera's Distribution 4 (CDH4) for Apache Hadoop.
 
@@ -66,6 +68,10 @@ This installs and starts up the NameNode, ResourceManager and HistoryServer.
 include cdh4::hadoop::worker
 ```
 This installs and starts up the DataNode and NodeManager.
+
+See [examples/](tree/master/examples) for more ideas on how to use this module.
+[examples/analytics.pp](examples/analytics.pp) shows an organized way you could group and install
+the cdh4 classes.
 
 ## Requirements
 This module was developed for  Ubuntu 12.04 LTS.  Since Cloudera's
