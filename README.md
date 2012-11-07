@@ -1,10 +1,10 @@
-Puppet module to install and manage components of Cloudera's Distribution 4 (CDH4) for Apache Hadoop.
-
-_NOTE_: This module currently only supports YARN, and not MapReduce version 1.
-
+Puppet module to install and manage components of a YARN installation of
+Cloudera's Distribution 4 (CDH4) for Apache Hadoop.
 
 # Description
-Installs HDFS, YARN MapReduce, hive, hbase, pig, sqoop, zookeeper, oozie and hue.  Note that, in order for this module to work, you will have to ensure that:
+Installs HDFS, YARN MapReduce, hive, hbase, pig, sqoop, zookeeper, oozie and
+hue.  Note that, in order for this module to work, you will have to ensure
+that:
 * Sun JRE version 6 or greater is installed
 * Your package manager is configured with a repository containing the
   Cloudera 4 packages.  (See examples/cloudera_apt.pp)
@@ -25,7 +25,9 @@ git submodule add git://github.com/wmf-analytics/cloudera-cdh4-puppet.git module
 git commit -m 'Adding modules/cdh4 as a git submodule.'
 ```
 
-This has only been tested on Ubuntu 12.04 LTS.  But, since Cloudera keeps their package names consistent between Linuxes, I don't see any reason why this wouldn't work on any Linux that has Cloudera Packages available.  The ```cdh4::apt_source``` will make the packages available from Cloudera's apt repository.  If you are installing on a different Linux, then you'll need to make sure that the packages are available somehow.
+The ```cdh4::apt_source``` class will make the packages available from Cloudera's
+apt repository.  If you are installing on a different Linux, then you'll need
+to make sure that the packages are available somehow.
 
 # Usage
 
@@ -47,7 +49,10 @@ class { "cdh4::hadoop::config":
 This will ensure that CDH4 client packages are installed, and that
 Hadoop related config files are in place with proper settings.
 
-The mounts parameter assumes that you want to keep your ```dfs.datanode.data.dir```, ```yarn.nodemanager.local-dirs```, and ```yarn.nodemanager.log-dirs``` all as subdirectories in each of the mount points provided.
+The mounts parameter assumes that you want to keep your
+```dfs.datanode.data.dir```, ```yarn.nodemanager.local-dirs```, and
+```yarn.nodemanager.log-dirs``` all as subdirectories in each of the mount
+points provided.
 
 
 ## For your Hadoop master NameNode:
@@ -62,4 +67,9 @@ include cdh4::hadoop::worker
 ```
 This installs and starts up the DataNode and NodeManager.
 
-
+## Requirements
+This module was developed for  Ubuntu 12.04 LTS.  Since Cloudera's
+package names are consistent across Linuxes, much of this could work in other
+distributions.  However, there are pieces that will require tweaking for
+that to work properly, so currently this module is restricted to Debian
+and Ubuntu.
