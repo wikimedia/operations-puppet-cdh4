@@ -1,8 +1,15 @@
 # == Class cdh4::oozie::server::install
 #
 class cdh4::oozie::server::install {
-	package { ["libtcnative-1", "oozie"]:
+	package { ["libtcnative-1", "libjs-extjs", "oozie"]:
 		ensure => installed,
+	}
+
+	# Symlink extjs install path into /var/lib/oozie.
+	# This is required for the Oozie web interface to work.
+	file { "/var/lib/oozie/extjs":
+		ensure  => "/usr/share/javascript/extjs",
+		require => [Package["oozie"], Package["libjs-extjs"]],
 	}
 
 	# Extract and install Oozie ShareLib into HDFS.
