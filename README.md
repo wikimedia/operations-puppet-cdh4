@@ -69,8 +69,8 @@ include cdh4::hadoop::worker
 ```
 This installs and starts up the DataNode and NodeManager.
 
-See [examples/](tree/master/examples) for more ideas on how to use this module.
-[examples/analytics.pp](examples/analytics.pp) shows an organized way you could group and install
+See [examples/](puppet-cdh4/tree/master/examples) for more ideas on how to use this module.
+[examples/analytics.pp](puppet-cdh4/tree/master/examples/analytics.pp) shows an organized way you could group and install
 the cdh4 classes.
 
 ## Requirements
