@@ -1,6 +1,6 @@
 # Note: This file is managed by Puppet.
 
-<% if @remote_jmx_port -%>
-# Enable JMX connections on port <%= remote_jmx_port %>
-SERVER_JVMFLAGS="-Dcom.sun.management.jmxremote.port=<%= remote_jmx_port %> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
+<% if @jmxremote_port -%>
+# Enable JMX connections on port <%= jmxremote_port %>
+SERVER_JVMFLAGS="-Dcom.sun.management.jmxremote.port=<%= jmxremote_port %> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
 <% end -%>

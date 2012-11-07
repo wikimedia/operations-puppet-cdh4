@@ -1,0 +1,16 @@
+# Note: This file is managed by Puppet.
+
+<% if @resourcemanager_jmxremote_port -%>
+# Enable YARN ResourceManager JMX connections on port <%= resourcemanager_jmxremote_port %>
+YARN_RESOURCEMANAGER_OPTS="-Dcom.sun.management.jmxremote.port=<%= resourcemanager_jmxremote_port %> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
+<% end -%>
+
+<% if @nodemanager_jmxremote_port -%>
+# Enable YARN NodeManager JMX connections on port <%= nodemanager_jmxremote_port %>
+YARN_NODEMANAGER_OPTS="-Dcom.sun.management.jmxremote.port=<%= nodemanager_jmxremote_port %> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
+<% end -%>
+
+<% if @proxyserver_jmxremote_port -%>
+# Enable YARN ProxyServer JMX connections on port <%= nodemanager_jmxremote_port %>
+YARN_PROXYSERVER_OPTS="-Dcom.sun.management.jmxremote.port=<%= proxyserver_jmxremote_port %> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
+<% end -%>
