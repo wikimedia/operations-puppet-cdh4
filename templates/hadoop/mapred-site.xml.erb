@@ -22,6 +22,16 @@
    <value>0.0.0.0:19888</value>
   </property>
 
+  <property>
+    <name>mapreduce.jobhistory.intermediate-done-dir</name>
+    <value>/user/history/done_intermediate</value>
+  </property>
+
+  <property>
+    <name>mapreduce.jobhistory.done-dir</name>
+    <value>/user/history/done</value>
+  </property>
+
 <% if @map_tasks_maximum -%>
   <property>
    <name>mapreduce.tasktracker.map.tasks.maximum</name>
