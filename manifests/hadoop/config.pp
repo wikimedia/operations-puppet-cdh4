@@ -10,20 +10,20 @@
 # This assumes that your JBOD mount points are already
 # formatted and mounted at the locations listed in $mounts.
 # 
-# dfs.datanode.data.dir will be set to each of {$mounts}/$data_path
-# yarn.nodemanager.local-dirs will be set to each of {$mounts}/$yarn_local_path
-# yarn.nodemanager.log-dirs will be set to each of {$mounts}/$yarn_logs_path
+# dfs.datanode.data.dir will be set to each of ${dfs_data_dir_mounts}/$data_path
+# yarn.nodemanager.local-dirs will be set to each of ${dfs_data_dir_mounts}/$yarn_local_path
+# yarn.nodemanager.log-dirs will be set to each of ${dfs_data_dir_mounts}/$yarn_logs_path
 #
 # == Parameters
-#   $mounts            - array of JBOD mount points.  Hadoop datanode and mapreduce/yarn directories will be here.
-#   $namenode_hostname - hostname of the namenode.  This will also be used as the hostname for the historyserver, proxyserver, and resourcemanager.
-#   $dfs_name_dir      - full path to hadoop NameNode name directory.  This can be an array of paths or a single string path.
-#   $config_directory  - path of the hadoop config directory.
-#   $dfs_data_path     - path relative to JBOD mount point for HDFS data directories.
-#   $enable_jmxremote  - enables remote JMX connections for all Hadoop services.  Ports are not currently configurable.  Default: true.
-#   $yarn_local_path   - path relative to JBOD mount point for yarn local directories.
-#   $yarn_logs_path    - path relative to JBOD mount point for yarn log directories.
-#   $dfs_block_size    - HDFS block size in bytes.  Default 64MB.
+#   $namenode_hostname   - hostname of the NameNode.  This will also be used as the hostname for the historyserver, proxyserver, and resourcemanager.
+#   $dfs_name_dir        - full path to hadoop NameNode name directory.  This can be an array of paths or a single string path.
+#   $config_directory    - path of the hadoop config directory.
+#   $dfs_data_dir_mounts - array of JBOD mount points.  Hadoop datanode and mapreduce/yarn directories will be here.
+#   $dfs_data_path       - path relative to JBOD mount point for HDFS data directories.
+#   $enable_jmxremote    - enables remote JMX connections for all Hadoop services.  Ports are not currently configurable.  Default: true.
+#   $yarn_local_path     - path relative to JBOD mount point for yarn local directories.
+#   $yarn_logs_path      - path relative to JBOD mount point for yarn log directories.
+#   $dfs_block_size      - HDFS block size in bytes.  Default 64MB.
 #   $enable_intermediate_compression   - If true, intermediate MapReduce data will be compressed with Snappy.
 #   $enable_final_compession           - If true, Final output of MapReduce jobs will be compressed with Snappy.
 #   $io_file_buffer_size
@@ -40,10 +40,10 @@
 #   - Add parameters for historyserver, proxyserver, resourcemanager hostnames, etc.
 #   - Set default map/reduce tasks automatically based on node stats.
 class cdh4::hadoop::config(
-	$mounts,
 	$namenode_hostname,
 	$dfs_name_dir,
 	$config_directory                  = '/etc/hadoop/conf',
+	$dfs_data_dir_mounts               = undef,
 	$dfs_data_path                     = 'hdfs/dn',
 	$yarn_local_path                   = 'yarn/local',
 	$yarn_logs_path                    = 'yarn/logs',
