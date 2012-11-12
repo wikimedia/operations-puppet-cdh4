@@ -56,17 +56,19 @@
     <value>true</value>
   </property>
 
+<% if @datanode_mounts -%>
   <property>
     <description>List of directories to store localized files in.</description>
     <name>yarn.nodemanager.local-dirs</name>
-    <value><%= mounts.collect { |mount| mount + "/" + yarn_local_path }.join(',') %></value>
+    <value><%= datanode_mounts.collect { |mount| mount + "/" + yarn_local_path }.join(',') %></value>
   </property>
 
   <property>
     <description>Where to store container logs.</description>
     <name>yarn.nodemanager.log-dirs</name>
-    <value><%= mounts.collect { |mount| mount + "/" + yarn_logs_path}.join(',') %></value>
+    <value><%= datanode_mounts.collect { |mount| mount + "/" + yarn_logs_path}.join(',') %></value>
   </property>
+<% end -%>
 
   <property>
     <description>Where to aggregate logs to.</description>
@@ -103,7 +105,7 @@
     <name>mapreduce.output.fileoutputformat.compress.type</name> 
     <value>BLOCK</value>
   </property>  
-  
+
   <property>
     <description>Classpath for typical applications.</description>
      <name>yarn.application.classpath</name>

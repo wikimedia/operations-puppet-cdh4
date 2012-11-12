@@ -10,22 +10,24 @@
    <name>dfs.permissions.superusergroup</name>
    <value>hadoop</value>
   </property>
-  
+
   <property>
    <name>dfs.namenode.name.dir</name>
    <value><%= (dfs_name_dir.class == Array) ? dfs_name_dir.join(',') : dfs_name_dir %></value>
   </property>
-<% if @dfs_data_dir_mounts -%>
+
+<% if @datanode_mounts -%>
   <property>
    <name>dfs.datanode.data.dir</name>
-   <value><%= dfs_data_dir_mounts.collect { |mount| mount + "/" + dfs_data_path }.join(',') %></value>
+   <value><%= datanode_mounts.collect { |mount| mount + "/" + dfs_data_path }.join(',') %></value>
   </property>
 <% end -%>
+
   <property>
    <name>dfs.block.size</name>
    <value><%= dfs_block_size %></value>
   </property>
-  
+
   <property>
     <name>dfs.webhdfs.enabled</name>
     <value><%= enable_webhdfs %></value>

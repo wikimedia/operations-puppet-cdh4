@@ -18,7 +18,7 @@
 #   $namenode_hostname   - hostname of the NameNode.  This will also be used as the hostname for the historyserver, proxyserver, and resourcemanager.
 #   $dfs_name_dir        - full path to hadoop NameNode name directory.  This can be an array of paths or a single string path.
 #   $config_directory    - path of the hadoop config directory.
-#   $dfs_data_dir_mounts - array of JBOD mount points.  Hadoop datanode and mapreduce/yarn directories will be here.
+#   $datanode_mounts     - array of JBOD mount points.  Hadoop datanode and mapreduce/yarn directories will be here.
 #   $dfs_data_path       - path relative to JBOD mount point for HDFS data directories.
 #   $enable_jmxremote    - enables remote JMX connections for all Hadoop services.  Ports are not currently configurable.  Default: true.
 #   $yarn_local_path     - path relative to JBOD mount point for yarn local directories.
@@ -43,7 +43,7 @@ class cdh4::hadoop::config(
 	$namenode_hostname,
 	$dfs_name_dir,
 	$config_directory                  = '/etc/hadoop/conf',
-	$dfs_data_dir_mounts               = undef,
+	$datanode_mounts                   = undef,
 	$dfs_data_path                     = 'hdfs/dn',
 	$yarn_local_path                   = 'yarn/local',
 	$yarn_logs_path                    = 'yarn/logs',
