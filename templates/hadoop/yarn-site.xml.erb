@@ -91,6 +91,15 @@
     <name>mapred.map.output.compress.codec</name> 
     <value>org.apache.hadoop.io.compress.SnappyCodec</value>
   </property>
+  
+  <property>
+    <name>yarn.resourcemanager.nodes.exclude-path</name>
+    <value><%= config_directory %>/hosts.exclude</value>
+    <description>
+      A file that contains a list of NodeManagers to exclude.
+      This is useful for decommissioning nodes.
+    </description>
+  </property>
 
   <!-- MapReduce final output compression -->
   <property>

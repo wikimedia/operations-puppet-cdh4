@@ -80,5 +80,14 @@
     <name>mapred.job.tracker</name>
     <value>localhost:8021</value>
   </property>
+  
+  <property>
+    <name>mapred.hosts.exclude</name>
+    <value><%= config_directory %>/hosts.exclude</value>
+    <description>
+      A file that contains a list of mapreduce hosts to exclude.
+      This is useful for decommissioning nodes.
+    </description>
+  </property>
 
 </configuration>

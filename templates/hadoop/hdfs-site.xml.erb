@@ -32,4 +32,13 @@
     <name>dfs.webhdfs.enabled</name>
     <value><%= enable_webhdfs %></value>
   </property>
+  
+  <property>
+    <name>dfs.hosts.exclude</name>
+    <value><%= config_directory %>/hosts.exclude</value>
+    <description>
+      A file that contains a list of DataNodes to exclude.
+      This is useful for decommissioning nodes.
+    </description>
+  </property>
 </configuration>
