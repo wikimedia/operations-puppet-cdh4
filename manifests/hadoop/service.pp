@@ -10,11 +10,17 @@
 class cdh4::hadoop::service::namenode {
 	require cdh4::hadoop::install::namenode
 	require cdh4::hadoop::config
+
 	
+	file { "$cdh4::hadoop::config::config_directory/hosts.exclude": 
+		ensure => "file"
+	}
+
 	service { "hadoop-hdfs-namenode": 
-		ensure => "running",
-		enable => true,
-		alias  => "namenode",
+		ensure   => "running",
+		enable  => true,
+		alias   => "namenode",
+		require => File["$cdh4::hadoop::config::config_directory/hosts.exclude"],
 	}
 }
 
