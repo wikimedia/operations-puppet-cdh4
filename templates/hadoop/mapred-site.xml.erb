@@ -70,7 +70,7 @@
 <% if @reduce_parallel_copies -%>
   <property>
     <name>mapreduce.reduce.parallel.copies</name>
-    <value><%= mapreduce_child_java_opts %></value>
+    <value><%= reduce_parallel_copies %></value>
   </property>
 <% end -%>
 
