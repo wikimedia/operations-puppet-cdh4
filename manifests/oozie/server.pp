@@ -5,7 +5,8 @@ class cdh4::oozie::server(
 	$jdbc_url      = 'jdbc:derby:${oozie.data.dir}/${oozie.db.schema.name}-db;create=true',
 	$jdbc_database = 'oozie',
 	$jdbc_username = "sa",
-	$jdbc_password = " ")
+	$jdbc_password = " ",
+	$authorization_service_security_enabled = true)
 {
 	include cdh4::oozie::server::install
 
@@ -15,6 +16,7 @@ class cdh4::oozie::server(
 		jdbc_database => $jdbc_database,
 		jdbc_username => $jdbc_username,
 		jdbc_password => $jdbc_password,
+		authorization_service_security_enabled => $authorization_service_security_enabled,
 		require       => Class["cdh4::oozie::server::install"],
 	}
 
