@@ -157,10 +157,10 @@
     password=<%= smtp_password %>
 
     # Whether to use a TLS (secure) connection when talking to the SMTP server
-    tls=<%= @smtp_use_tls ? 'yes' : 'no' %>
+    tls=<%= smtp_user.empty? ? 'no' : 'yes' %>
 
     # Default email address to use for various automated notification from Hue
-    <%= @smtp_default_email ? "default_from_email=#{smtp_default_email}" : "## default_from_email=hue@localhost" %>
+    <%= @smtp_from_email ? "default_from_email=#{smtp_from_email}" : "## default_from_email=hue@localhost" %>
 
 
   # Configuration options for Kerberos integration for secured Hadoop clusters
