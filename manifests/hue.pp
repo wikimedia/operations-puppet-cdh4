@@ -28,7 +28,6 @@ class cdh4::hue(
 		smtp_port             => $smtp_port,
 		smtp_user             => $smtp_user,
 		smtp_password         => $smtp_password,
-		smtp_use_tls          => $smtp_use_tls,
 		smtp_default_email    => $smtp_default_email,
 		ldap_url              => $ldap_url,
 		ldap_cert             => $ldap_cert,
