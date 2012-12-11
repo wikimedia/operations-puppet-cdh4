@@ -6,6 +6,12 @@
 #
 class cdh4::hue(
 	$secret_key            = undef,
+	$smtp_host             = 'localhost',
+	$smtp_port             = 25,
+	$smtp_user             = undef,
+	$smtp_password         = undef,
+	$smtp_use_tls          = false,
+	$smtp_default_email    = undef,
 	$ldap_url              = undef,
 	$ldap_cert             = undef,
 	$ldap_nt_domain        = undef,
@@ -19,6 +25,12 @@ class cdh4::hue(
 	# config needs hue installed and hadoop config defined.
 	class { "cdh4::hue::config":
 		secret_key            => $secret_key,
+		smtp_host             => $smtp_host,
+		smtp_port             => $smtp_port,
+		smtp_user             => $smtp_user,
+		smtp_password         => $smtp_password,
+		smtp_use_tls          => $smtp_use_tls,
+		smtp_default_email    => $smtp_default_email,
 		ldap_url              => $ldap_url,
 		ldap_cert             => $ldap_cert,
 		ldap_nt_domain        => $ldap_nt_domain,
@@ -28,6 +40,7 @@ class cdh4::hue(
 		ldap_username_pattern => $ldap_username_pattern,
 		require               => [Class["cdh4::hue::install"], Class["cdh4::hadoop::config"]],
 	}
+
 
 	# The hue service subscribes to the hue config file.
 	class { "cdh4::hue::service": 

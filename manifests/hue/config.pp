@@ -5,6 +5,12 @@
 #
 class cdh4::hue::config(
 	$secret_key            = undef,
+	$smtp_host             = 'localhost',
+	$smtp_port             = 25,
+	$smtp_user             = '',
+	$smtp_password         = '',
+	$smtp_use_tls          = false,
+	$smtp_default_email    = undef,
 	$ldap_url              = undef,
 	$ldap_cert             = undef,
 	$ldap_nt_domain        = undef,
