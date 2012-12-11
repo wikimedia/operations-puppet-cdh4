@@ -389,5 +389,40 @@
          <name>oozie.action.mapreduce.uber.jar.enable</name>
          <value>true</value>
     </property>
+    
+<% if @smtp_host -%>
+    <!-- smtp email configuration -->
+    <property>
+      <name>oozie.email.smtp.host</name>
+      <value><%= smtp_host %></value>
+    </property>
+    <property>
+      <name>oozie.email.smtp.port</name>
+      <value><%= smtp_port%></value>
+    </property>
+
+<% if @smtp_from_email -%>
+    <property>
+      <name>oozie.email.from.address</name>
+      <value><%= smtp_from_email %></value>
+    </property>
+<% end -%>
+
+<% if @smtp_username -%>
+  <property>
+    <name>oozie.email.smtp.auth</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>oozie.email.smtp.username</name>
+    <value><%= smtp_username %></value>
+  </property>
+  <property>
+    <name>oozie.email.smtp.password</name>
+    <value><%= smtp_password %></value>
+  </property>
+<% end -%>
+
+<% end # if @smtp_host -%>
 
 </configuration>

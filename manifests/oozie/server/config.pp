@@ -6,6 +6,11 @@ class cdh4::oozie::server::config(
 	$jdbc_database,
 	$jdbc_username,
 	$jdbc_password,
+	$smtp_host             = undef,
+	$smtp_port             = 25,
+	$smtp_from_email       = undef,
+	$smtp_username         = undef,
+	$smtp_password         = undef,
 	$authorization_service_security_enabled = true)
 {
 	file { "/etc/oozie/conf/oozie-env.sh":
