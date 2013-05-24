@@ -12,3 +12,15 @@
 - Support Secondary NameNode.
 - Support High Availability NameNode.
 - Make JMX ports configurable.
+
+## Hive
+- Hive Server + Hive Metastore
+
+## Oozie
+
+## Hue
+
+## HBase
+
+## Zookeeper
+

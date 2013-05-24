@@ -6,4 +6,6 @@ class { '::cdh4::hadoop':
   dfs_name_dir         => '/var/lib/hadoop/name',
 }
 
+# jobtracker requires namenode
+include cdh4::hadoop::namenode
 include cdh4::hadoop::jobtracker
