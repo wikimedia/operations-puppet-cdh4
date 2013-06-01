@@ -26,33 +26,46 @@
 #   $io_file_buffer_size
 #   $map_tasks_maximum
 #   $reduce_tasks_maximum
+#   $mapreduce_job_reuse_jvm_num_tasks
 #   $reduce_parallel_copies
 #   $map_memory_mb
-#   $mapreduce_job_reuse_jvm_num_tasks
+#   $reduce_memory_mb
+#   $mapreduce_task_io_sort_mb
+#   $mapreduce_task_io_sort_factor
+#   $mapreduce_map_java_opts
 #   $mapreduce_child_java_opts
+#   $yarn_nodemanager_resource_memory_mb
+#   $yarn_resourcemanager_scheduler_class - If you change this (e.g. to FairScheduler), you should also provide your own scheduler config .xml files outside of the cdh4 module.
 #   $use_yarn
 #
 class cdh4::hadoop(
   $namenode_hostname,
   $dfs_name_dir,
-  $config_directory                  = $::cdh4::hadoop::defaults::config_directory,
-  $datanode_mounts                   = $::cdh4::hadoop::defaults::datanode_mounts,
-  $dfs_data_path                     = $::cdh4::hadoop::defaults::dfs_data_path,
-  $yarn_local_path                   = $::cdh4::hadoop::defaults::yarn_local_path,
-  $yarn_logs_path                    = $::cdh4::hadoop::defaults::yarn_logs_path,
-  $dfs_block_size                    = $::cdh4::hadoop::defaults::dfs_block_size,
-  $enable_jmxremote                  = $::cdh4::hadoop::defaults::enable_jmxremote,
-  $enable_webhdfs                    = $::cdh4::hadoop::defaults::enable_webhdfs,
-  $enable_intermediate_compression   = $::cdh4::hadoop::defaults::enable_intermediate_compression,
-  $enable_final_compession           = $::cdh4::hadoop::defaults::enable_final_compession,
-  $io_file_buffer_size               = $::cdh4::hadoop::defaults::io_file_buffer_size,
-  $map_tasks_maximum                 = $::cdh4::hadoop::defaults::map_tasks_maximum,
-  $reduce_tasks_maximum              = $::cdh4::hadoop::defaults::reduce_tasks_maximum,
-  $reduce_parallel_copies            = $::cdh4::hadoop::defaults::reduce_parallel_copies,
-  $map_memory_mb                     = $::cdh4::hadoop::defaults::map_memory_mb,
-  $mapreduce_job_reuse_jvm_num_tasks = $::cdh4::hadoop::defaults::mapreduce_job_reuse_jvm_num_tasks,
-  $mapreduce_child_java_opts         = $::cdh4::hadoop::defaults::mapreduce_child_java_opts,
-  $use_yarn                          = $::cdh4::hadoop::defaults::use_yarn
+  $config_directory                        = $::cdh4::hadoop::defaults::config_directory,
+  $datanode_mounts                         = $::cdh4::hadoop::defaults::datanode_mounts,
+  $dfs_data_path                           = $::cdh4::hadoop::defaults::dfs_data_path,
+  $yarn_local_path                         = $::cdh4::hadoop::defaults::yarn_local_path,
+  $yarn_logs_path                          = $::cdh4::hadoop::defaults::yarn_logs_path,
+  $dfs_block_size                          = $::cdh4::hadoop::defaults::dfs_block_size,
+  $enable_jmxremote                        = $::cdh4::hadoop::defaults::enable_jmxremote,
+  $enable_webhdfs                          = $::cdh4::hadoop::defaults::enable_webhdfs,
+  $enable_intermediate_compression         = $::cdh4::hadoop::defaults::enable_intermediate_compression,
+  $enable_final_compession                 = $::cdh4::hadoop::defaults::enable_final_compession,
+  $io_file_buffer_size                     = $::cdh4::hadoop::defaults::io_file_buffer_size,
+  $mapreduce_map_tasks_maximum             = $::cdh4::hadoop::defaults::mapreduce_map_tasks_maximum,
+  $mapreduce_reduce_tasks_maximum          = $::cdh4::hadoop::defaults::mapreduce_reduce_tasks_maximum,
+  $mapreduce_job_reuse_jvm_num_tasks       = $::cdh4::hadoop::defaults::mapreduce_job_reuse_jvm_num_tasks,
+  $mapreduce_reduce_shuffle_parallelcopies = $::cdh4::hadoop::defaults::mapreduce_reduce_shuffle_parallelcopies,
+  $mapreduce_map_memory_mb                 = $::cdh4::hadoop::defaults::mapreduce_map_memory_mb,
+  $mapreduce_reduce_memory_mb              = $::cdh4::hadoop::defaults::mapreduce_reduce_memory_mb,
+  $mapreduce_task_io_sort_mb               = $::cdh4::hadoop::defaults::mapreduce_task_io_sort_mb,
+  $mapreduce_task_io_sort_factor           = $::cdh4::hadoop::defaults::mapreduce_task_io_sort_factor,
+  $mapreduce_map_java_opts                 = $::cdh4::hadoop::defaults::mapreduce_map_java_opts,
+  $mapreduce_reduce_java_opts              = $::cdh4::hadoop::defaults::mapreduce_reduce_java_opts,
+  $yarn_nodemanager_resource_memory_mb     = $::cdh4::hadoop::defaults::yarn_nodemanager_resource_memory_mb,
+  $yarn_resourcemanager_scheduler_class    = $::cdh4::hadoop::defaults::yarn_resourcemanager_scheduler_class,
+  $use_yarn                                = $::cdh4::hadoop::defaults::use_yarn
+
 ) inherits cdh4::hadoop::defaults
 {
   # JMX Ports

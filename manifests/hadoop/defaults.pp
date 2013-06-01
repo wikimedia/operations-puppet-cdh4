@@ -2,22 +2,28 @@
 # Default parameters for cdh4::hadoop configuration.
 #
 class cdh4::hadoop::defaults {
-  $config_directory                  = '/etc/hadoop/conf'
-  $datanode_mounts                   = undef
-  $dfs_data_path                     = 'hdfs/dn'
-  $yarn_local_path                   = 'yarn/local'
-  $yarn_logs_path                    = 'yarn/logs'
-  $dfs_block_size                    = 67108864 # 64MB default
-  $enable_jmxremote                  = true
-  $enable_webhdfs                    = true
-  $enable_intermediate_compression   = true
-  $enable_final_compession           = false
-  $io_file_buffer_size               = undef
-  $map_tasks_maximum                 = undef
-  $reduce_tasks_maximum              = undef
-  $reduce_parallel_copies            = undef
-  $map_memory_mb                     = undef
-  $mapreduce_job_reuse_jvm_num_tasks = undef
-  $mapreduce_child_java_opts         = undef
-  $use_yarn                          = true
+  $config_directory                        = '/etc/hadoop/conf'
+  $datanode_mounts                         = undef
+  $dfs_data_path                           = 'hdfs/dn'
+  $yarn_local_path                         = 'yarn/local'
+  $yarn_logs_path                          = 'yarn/logs'
+  $dfs_block_size                          = 67108864 # 64MB default
+  $enable_jmxremote                        = true
+  $enable_webhdfs                          = true
+  $enable_intermediate_compression         = true
+  $enable_final_compession                 = false
+  $io_file_buffer_size                     = undef
+  $mapreduce_map_tasks_maximum             = undef
+  $mapreduce_reduce_tasks_maximum          = undef
+  $mapreduce_job_reuse_jvm_num_tasks       = undef
+  $mapreduce_reduce_shuffle_parallelcopies = undef
+  $mapreduce_map_memory_mb                 = undef
+  $mapreduce_reduce_memory_mb              = undef
+  $mapreduce_task_io_sort_mb               = undef
+  $mapreduce_task_io_sort_factor           = undef
+  $mapreduce_map_java_opts                 = undef
+  $mapreduce_reduce_java_opts              = undef
+  $yarn_nodemanager_resource_memory_mb     = undef
+  $yarn_resourcemanager_scheduler_class    = undef
+  $use_yarn                                = true
 }

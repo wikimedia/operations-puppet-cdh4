@@ -28,6 +28,13 @@
     <value>0.0.0.0:8088</value>
   </property>
 
+<% if @yarn_resourcemanager_scheduler_class -%>
+  <property>
+    <name>yarn.resourcemanager.scheduler.class</name>
+    <value><%= yarn_resourcemanager_scheduler_class %></value>
+  </property>
+<% end -%>
+
   <property>
     <name>yarn.nodemanager.localizer.address</name>
     <value>0.0.0.0:8040</value>
@@ -70,11 +77,19 @@
   </property>
 <% end -%>
 
+<% if @yarn_nodemanager_resource_memory_mb -%>
+  <property>
+    <name>yarn.nodemanager.resource.memory-mb</name>
+    <value><%= yarn_nodemanager_resource_memory_mb %></value>
+  </property>
+<% end -%>
+
   <property>
     <description>Where to aggregate logs to.</description>
     <name>yarn.nodemanager.remote-app-log-dir</name>
     <value>/var/log/hadoop-yarn/apps</value>
   </property>
+
   
   <property>
       <name>yarn.app.mapreduce.am.staging-dir</name>
@@ -88,7 +103,7 @@
     <value><%= enable_intermediate_compression %></value>
   </property>
   <property>
-    <name>mapred.map.output.compress.codec</name> 
+    <name>mapreduce.map.output.compress.codec</name> 
     <value>org.apache.hadoop.io.compress.SnappyCodec</value>
   </property>
   

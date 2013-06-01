@@ -45,24 +45,17 @@
   </property>
 <% end -%>
 
-<% if @map_tasks_maximum -%>
+<% if @mapreduce_map_tasks_maximum -%>
   <property>
    <name>mapreduce.tasktracker.map.tasks.maximum</name>
-   <value><%= map_tasks_maximum %></value>
+   <value><%= mapreduce_map_tasks_maximum %></value>
   </property>
 <% end -%>
 
-<% if @reduce_tasks_maximum -%>
+<% if @mapreduce_reduce_tasks_maximum -%>
   <property>
    <name>mapreduce.tasktracker.reduce.tasks.maximum</name>
-   <value><%= reduce_tasks_maximum %></value>
-  </property>
-<% end -%>
-
-<% if @map_memory_mb -%>
-  <property>
-   <name>mapreduce.map.memory.mb</name>
-   <value><%= map_memory_mb %></value>
+   <value><%= mapreduce_reduce_tasks_maximum %></value>
   </property>
 <% end -%>
 
@@ -73,17 +66,52 @@
   </property>
 <% end -%>
 
-<% if @mapreduce_child_java_opts -%>
+<% if @mapreduce_reduce_shuffle_parallelcopies -%>
   <property>
-    <name>mapreduce.child.java.opts</name>
-    <value><%= mapreduce_child_java_opts %></value>
+    <name>mapreduce.reduce.parallel.copies</name>
+    <value><%= mapreduce_reduce_shuffle_parallelcopies %></value>
   </property>
 <% end -%>
 
-<% if @reduce_parallel_copies -%>
+<% if @mapreduce_map_memory_mb -%>
   <property>
-    <name>mapreduce.reduce.parallel.copies</name>
-    <value><%= reduce_parallel_copies %></value>
+   <name>mapreduce.map.memory.mb</name>
+   <value><%= mapreduce_map_memory_mb %></value>
+  </property>
+<% end -%>
+
+<% if @mapreduce_reduce_memory_mb -%>
+  <property>
+   <name>mapreduce.reduce.memory.mb</name>
+   <value><%= mapreduce_reduce_memory_mb %></value>
+  </property>
+<% end -%>
+
+<% if @mapreduce_task_io_sort_mb -%>
+  <property>
+    <name>mapreduce.task.io.sort.mb</name>
+    <value><%= mapreduce_task_io_sort_mb %></value>
+  </property>
+<% end -%>
+
+<% if @mapreduce_task_io_sort_factor -%>
+  <property>
+    <name>mapreduce.task.io.sort.factor</name>
+    <value><%= mapreduce_task_io_sort_factor %></value>
+  </property>
+<% end -%>
+
+<% if @mapreduce_map_java_opts -%>
+  <property>
+    <name>mapreduce.map.java.opts</name>
+    <value><%= mapreduce_map_java_opts %></value>
+  </property>
+<% end -%>
+
+<% if @mapreduce_reduce_java_opts -%>
+  <property>
+    <name>mapreduce.reduce.java.opts</name>
+    <value><%= mapreduce_reduce_java_opts %></value>
   </property>
 <% end -%>
 
