@@ -21,8 +21,6 @@
 #   $yarn_local_path     - path relative to JBOD mount point for yarn local directories.
 #   $yarn_logs_path      - path relative to JBOD mount point for yarn log directories.
 #   $dfs_block_size      - HDFS block size in bytes.  Default 64MB.
-#   $enable_intermediate_compression   - If true, intermediate MapReduce data will be compressed with Snappy.
-#   $enable_final_compession           - If true, Final output of MapReduce jobs will be compressed with Snappy.
 #   $io_file_buffer_size
 #   $map_tasks_maximum
 #   $reduce_tasks_maximum
@@ -34,6 +32,8 @@
 #   $mapreduce_task_io_sort_factor
 #   $mapreduce_map_java_opts
 #   $mapreduce_child_java_opts
+#   $mapreduce_intermediate_compression   - If true, intermediate MapReduce data will be compressed with Snappy.    Default: true.
+#   $mapreduce_final_compession           - If true, Final output of MapReduce jobs will be compressed with Snappy. Default: false.
 #   $yarn_nodemanager_resource_memory_mb
 #   $yarn_resourcemanager_scheduler_class - If you change this (e.g. to FairScheduler), you should also provide your own scheduler config .xml files outside of the cdh4 module.
 #   $use_yarn
@@ -49,8 +49,6 @@ class cdh4::hadoop(
   $dfs_block_size                          = $::cdh4::hadoop::defaults::dfs_block_size,
   $enable_jmxremote                        = $::cdh4::hadoop::defaults::enable_jmxremote,
   $enable_webhdfs                          = $::cdh4::hadoop::defaults::enable_webhdfs,
-  $enable_intermediate_compression         = $::cdh4::hadoop::defaults::enable_intermediate_compression,
-  $enable_final_compession                 = $::cdh4::hadoop::defaults::enable_final_compession,
   $io_file_buffer_size                     = $::cdh4::hadoop::defaults::io_file_buffer_size,
   $mapreduce_map_tasks_maximum             = $::cdh4::hadoop::defaults::mapreduce_map_tasks_maximum,
   $mapreduce_reduce_tasks_maximum          = $::cdh4::hadoop::defaults::mapreduce_reduce_tasks_maximum,
@@ -62,6 +60,8 @@ class cdh4::hadoop(
   $mapreduce_task_io_sort_factor           = $::cdh4::hadoop::defaults::mapreduce_task_io_sort_factor,
   $mapreduce_map_java_opts                 = $::cdh4::hadoop::defaults::mapreduce_map_java_opts,
   $mapreduce_reduce_java_opts              = $::cdh4::hadoop::defaults::mapreduce_reduce_java_opts,
+  $mapreduce_intermediate_compression      = $::cdh4::hadoop::defaults::mapreduce_intermediate_compression,
+  $mapreduce_final_compession              = $::cdh4::hadoop::defaults::mapreduce_final_compession,
   $yarn_nodemanager_resource_memory_mb     = $::cdh4::hadoop::defaults::yarn_nodemanager_resource_memory_mb,
   $yarn_resourcemanager_scheduler_class    = $::cdh4::hadoop::defaults::yarn_resourcemanager_scheduler_class,
   $use_yarn                                = $::cdh4::hadoop::defaults::use_yarn

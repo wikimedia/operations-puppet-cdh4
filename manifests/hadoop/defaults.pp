@@ -10,8 +10,6 @@ class cdh4::hadoop::defaults {
   $dfs_block_size                          = 67108864 # 64MB default
   $enable_jmxremote                        = true
   $enable_webhdfs                          = true
-  $enable_intermediate_compression         = true
-  $enable_final_compession                 = false
   $io_file_buffer_size                     = undef
   $mapreduce_map_tasks_maximum             = undef
   $mapreduce_reduce_tasks_maximum          = undef
@@ -23,6 +21,8 @@ class cdh4::hadoop::defaults {
   $mapreduce_task_io_sort_factor           = undef
   $mapreduce_map_java_opts                 = undef
   $mapreduce_reduce_java_opts              = undef
+  $mapreduce_intermediate_compression      = true
+  $mapreduce_final_compression             = false
   $yarn_nodemanager_resource_memory_mb     = undef
   $yarn_resourcemanager_scheduler_class    = undef
   $use_yarn                                = true

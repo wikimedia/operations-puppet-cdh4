@@ -58,10 +58,6 @@
     <value>org.apache.hadoop.mapred.ShuffleHandler</value>
   </property>
 
-  <property>
-    <name>yarn.log-aggregation-enable</name>
-    <value>true</value>
-  </property>
 
 <% if @datanode_mounts -%>
   <property>
@@ -85,6 +81,11 @@
 <% end -%>
 
   <property>
+    <name>yarn.log-aggregation-enable</name>
+    <value>true</value>
+  </property>
+
+  <property>
     <description>Where to aggregate logs to.</description>
     <name>yarn.nodemanager.remote-app-log-dir</name>
     <value>/var/log/hadoop-yarn/apps</value>
@@ -96,17 +97,6 @@
       <value>/user</value>
   </property>
 
-
-  <!-- MapReduce intermediate compression -->
-  <property>
-    <name>mapreduce.map.output.compress</name> 
-    <value><%= enable_intermediate_compression %></value>
-  </property>
-  <property>
-    <name>mapreduce.map.output.compress.codec</name> 
-    <value>org.apache.hadoop.io.compress.SnappyCodec</value>
-  </property>
-  
   <property>
     <name>yarn.resourcemanager.nodes.exclude-path</name>
     <value><%= config_directory %>/hosts.exclude</value>
@@ -115,20 +105,6 @@
       This is useful for decommissioning nodes.
     </description>
   </property>
-
-  <!-- MapReduce final output compression -->
-  <property>
-    <name>mapreduce.output.fileoutputformat.compress</name> 
-    <value><%= enable_final_compession %></value>
-  </property>
-  <property>
-    <name>mapred.output.fileoutputformat.compress.codec</name> 
-    <value>org.apache.hadoop.io.compress.SnappyCodec</value>
-  </property>
-  <property>
-    <name>mapreduce.output.fileoutputformat.compress.type</name> 
-    <value>BLOCK</value>
-  </property>  
 
   <property>
     <description>Classpath for typical applications.</description>
