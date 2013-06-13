@@ -82,6 +82,12 @@ class cdh4::hadoop(
     ensure => 'installed'
   }
 
+  if $enable_lzo {
+    package { 'lzo':
+      ensure => 'installed'
+    }
+  }
+
   # All config files require hadoop-client package
   File {
     require => Package['hadoop-client']
