@@ -6,6 +6,7 @@ class cdh4::hbase(
   $root_dir         = $::cdh4::hbase::defaults::root_dir,
   $config_directory = $::cdh4::hbase::defaults::config_directory,
   $master_domain    = $::cdh4::hbase::defaults::master_domain,
+  $zookeeper_master = $::cdh4::hbase::defaults::zookeeper_master,
 ) inherits cdh4::hbase::defaults 
 {
   package { 'hbase':

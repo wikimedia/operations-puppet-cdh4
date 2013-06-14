@@ -30,4 +30,10 @@
     <name>hbase.rootdir</name>
     <value>hdfs://<%= @master_domain %>:8020<%= @root_dir %></value>
 </property>
+<% if @zookeeper_master -%>
+<property>
+    <name>hbase.zookeeper.quorum</name>
+    <value><%= @zookeeper_master %></value>
+</property>
+<% end -%>
 </configuration>
