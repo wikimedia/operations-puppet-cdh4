@@ -122,7 +122,11 @@
   </property>
   <property>
     <name>mapreduce.map.output.compress.codec</name>
+<%if @enable_lzo -%>
+    <value>com.hadoop.compression.lzo.LzoCodec</value>
+<% else -%>
     <value>org.apache.hadoop.io.compress.SnappyCodec</value>
+<% end -%>
   </property>
 
   <!-- MapReduce final output compression -->

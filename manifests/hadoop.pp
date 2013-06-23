@@ -32,11 +32,12 @@
 #   $mapreduce_task_io_sort_factor
 #   $mapreduce_map_java_opts
 #   $mapreduce_child_java_opts
-#   $mapreduce_intermediate_compression   - If true, intermediate MapReduce data will be compressed with Snappy.    Default: true.
+#   $mapreduce_intermediate_compression   - If true, intermediate MapReduce data will be compressed with Snappy or LZO.    Default: true.
 #   $mapreduce_final_compession           - If true, Final output of MapReduce jobs will be compressed with Snappy. Default: false.
 #   $yarn_nodemanager_resource_memory_mb
 #   $yarn_resourcemanager_scheduler_class - If you change this (e.g. to FairScheduler), you should also provide your own scheduler config .xml files outside of the cdh4 module.
 #   $use_yarn
+#   $enable_lzo          - Enables LZO compression in Hadoop. Default: false 
 #
 class cdh4::hadoop(
   $namenode_hostname,
@@ -64,7 +65,8 @@ class cdh4::hadoop(
   $mapreduce_final_compession              = $::cdh4::hadoop::defaults::mapreduce_final_compession,
   $yarn_nodemanager_resource_memory_mb     = $::cdh4::hadoop::defaults::yarn_nodemanager_resource_memory_mb,
   $yarn_resourcemanager_scheduler_class    = $::cdh4::hadoop::defaults::yarn_resourcemanager_scheduler_class,
-  $use_yarn                                = $::cdh4::hadoop::defaults::use_yarn
+  $use_yarn                                = $::cdh4::hadoop::defaults::use_yarn,
+  $enable_lzo                              =$::cdh4::hadoop::defaults::enable_lzo
 
 ) inherits cdh4::hadoop::defaults
 {
@@ -78,6 +80,12 @@ class cdh4::hadoop(
 
   package { 'hadoop-client':
     ensure => 'installed'
+  }
+
+  if $enable_lzo {
+    package { 'lzo':
+      ensure => 'installed'
+    }
   }
 
   # All config files require hadoop-client package
