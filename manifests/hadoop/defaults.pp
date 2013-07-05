@@ -11,6 +11,7 @@ class cdh4::hadoop::defaults {
   $enable_jmxremote                        = true
   $enable_webhdfs                          = true
   $io_file_buffer_size                     = undef
+  $mapreduce_system_dir			   = undef
   $mapreduce_map_tasks_maximum             = undef
   $mapreduce_reduce_tasks_maximum          = undef
   $mapreduce_job_reuse_jvm_num_tasks       = undef
