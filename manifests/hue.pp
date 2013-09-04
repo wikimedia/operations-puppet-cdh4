@@ -143,13 +143,19 @@ class cdh4::hue(
         # files in /etc/ssl/private.
         $ssl_enabled = true
         if (!defined(Package['openssl'])) {
-            package{ 'openssl':
+            package { 'openssl':
+                ensure => 'installed',
+                before => User['hue'],
+            }
+        }
+        if (!defined(Package['ssl-cert'])) {
+            package { 'ssl-cert':
                 ensure => 'installed',
                 before => User['hue'],
             }
         }
         if (!defined(Package['python-openssl'])) {
-            package{ 'python-openssl':
+            package { 'python-openssl':
                 ensure => 'installed',
             }
         }
