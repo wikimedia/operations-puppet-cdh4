@@ -152,6 +152,19 @@ class cdh4::hadoop(
         default => 'present',
     }
 
+    # Render net-topology.sh from $net_topology_script_template
+    # if it was given.
+    $net_topology_script_ensure = $net_topology_script_template ? {
+        undef   => 'absent',
+        default => 'present',
+    }
+    $net_topology_script_path = "${config_directory}/net-topology.sh"
+    file { $net_topology_script_path:
+        ensure  => $net_topology_script_ensure,
+        content => template($net_topology_script_template),
+        mode    => '0755',
+    }
+
     file { "${config_directory}/log4j.properties":
         content => template('cdh4/hadoop/log4j.properties.erb'),
     }
@@ -184,19 +197,6 @@ class cdh4::hadoop(
     file { "${config_directory}/yarn-env.sh":
         ensure  => $yarn_ensure,
         content => template('cdh4/hadoop/yarn-env.sh.erb'),
-    }
-
-    # Render net-topology.sh from $net_topology_script_template
-    # if it was given.
-    $net_topology_script_ensure = $net_topology_script_template ? {
-        undef   => 'absent',
-        default => 'present',
-    }
-    $net_topology_script_path = "${config_directory}/net-topology.sh"
-    file { $net_topology_script_path:
-        ensure  => $net_topology_script_ensure,
-        content => template($net_topology_script_template),
-        mode    => '0755',
     }
 
     # Render hadoop-metrics2.properties
