@@ -45,4 +45,12 @@
   </property>
 <% end -%>
 
+<% if @net_topology_script_template -%>
+  <!-- Script used to map nodes to rack or rows in datacenter. -->
+  <property>
+      <name>net.topology.script.file.name</name>
+      <value><%= @net_topology_script_path %></value>
+  </property>
+<% end -%>
+
 </configuration>

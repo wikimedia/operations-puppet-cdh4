@@ -33,4 +33,5 @@ class cdh4::hadoop::defaults {
     $yarn_resourcemanager_scheduler_class    = undef
     $use_yarn                                = true
     $ganglia_hosts                           = undef
+    $net_topology_script_template            = undef
 }

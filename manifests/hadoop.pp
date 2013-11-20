@@ -58,6 +58,9 @@
 #   $use_yarn
 #   $ganglia_hosts                        - Set this to an array of ganglia host:ports
 #                                           if you want to enable ganglia sinks in hadoop-metrics2.properites
+#   $net_topology_script_template         - Puppet ERb template path  to script that will be
+#                                           invoked to resolve node names to row or rack assignments.
+#                                           Default: undef
 #
 class cdh4::hadoop(
     $namenode_hosts,
@@ -94,7 +97,8 @@ class cdh4::hadoop(
     $yarn_nodemanager_resource_memory_mb     = $::cdh4::hadoop::defaults::yarn_nodemanager_resource_memory_mb,
     $yarn_resourcemanager_scheduler_class    = $::cdh4::hadoop::defaults::yarn_resourcemanager_scheduler_class,
     $use_yarn                                = $::cdh4::hadoop::defaults::use_yarn,
-    $ganglia_hosts                           = $::cdh4::hadoop::defaults::ganglia_hosts
+    $ganglia_hosts                           = $::cdh4::hadoop::defaults::ganglia_hosts,
+    $net_topology_script_template            = $::cdh4::hadoop::defaults::net_topology_script_template
 ) inherits cdh4::hadoop::defaults
 {
     # JMX Ports
@@ -129,10 +133,9 @@ class cdh4::hadoop(
     # This is the primary NameNode ID used to identify
     # a NameNode when running HDFS with a logical nameservice_id.
     # We can't use '.' characters because NameNode IDs
-    # will be used in the names of some Java properties, 
+    # will be used in the names of some Java properties,
     # which are '.' delimited.
     $primary_namenode_id   = inline_template('<%= @primary_namenode_host.tr(\'.\', \'-\') %>')
-
 
     package { 'hadoop-client':
         ensure => 'installed'
@@ -181,6 +184,19 @@ class cdh4::hadoop(
     file { "${config_directory}/yarn-env.sh":
         ensure  => $yarn_ensure,
         content => template('cdh4/hadoop/yarn-env.sh.erb'),
+    }
+
+    # Render net-topology.sh from $net_topology_script_template
+    # if it was given.
+    $net_topology_script_ensure = $net_topology_script_template ? {
+        undef   => 'absent',
+        default => 'present',
+    }
+    $net_topology_script_path = "${config_directory}/net-topology.sh"
+    file { $net_topology_script_path:
+        ensure  => $net_topology_script_ensure,
+        content => template($net_topology_script_template),
+        mode    => '0755',
     }
 
     # Render hadoop-metrics2.properties
