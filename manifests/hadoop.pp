@@ -161,9 +161,16 @@ class cdh4::hadoop(
     $net_topology_script_path = "${config_directory}/net-topology.sh"
     file { $net_topology_script_path:
         ensure  => $net_topology_script_ensure,
-        content => template($net_topology_script_template),
         mode    => '0755',
     }
+    # Conditionally overriding content attribute since
+    # $net_topology_script_template is default undef.
+    if ($net_topology_script_ensure) {
+        File[$net_topology_script_path] {
+            content => template($net_topology_script_template),
+        }
+    }
+
 
     file { "${config_directory}/log4j.properties":
         content => template('cdh4/hadoop/log4j.properties.erb'),
