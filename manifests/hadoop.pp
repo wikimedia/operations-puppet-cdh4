@@ -165,7 +165,7 @@ class cdh4::hadoop(
     }
     # Conditionally overriding content attribute since
     # $net_topology_script_template is default undef.
-    if ($net_topology_script_ensure) {
+    if ($net_topology_script_ensure == 'present') {
         File[$net_topology_script_path] {
             content => template($net_topology_script_template),
         }
