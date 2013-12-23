@@ -129,21 +129,21 @@
   </property>
   <property>
     <name>mapreduce.map.output.compress.codec</name>
-    <value>org.apache.hadoop.io.compress.SnappyCodec</value>
+    <value><%= mapreduce_intermediate_compression_codec %></value>
   </property>
 
   <!-- MapReduce final output compression -->
   <property>
     <name>mapreduce.output.fileoutputformat.compress</name>
-    <value><%= mapreduce_final_compression %></value>
+    <value><%= mapreduce_output_compression %></value>
   </property>
   <property>
-    <name>mapred.output.fileoutputformat.compress.codec</name>
-    <value>org.apache.hadoop.io.compress.SnappyCodec</value>
+    <name>mapreduce.output.fileoutputformat.compress.codec</name>
+    <value><%= mapreduce_output_compression_codec %></value>
   </property>
   <property>
     <name>mapreduce.output.fileoutputformat.compress.type</name>
-    <value>BLOCK</value>
+    <value><%= mapreduce_output_compression_type %></value>
   </property>
 
   <property>

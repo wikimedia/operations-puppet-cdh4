@@ -46,59 +46,68 @@
 #   $mapreduce_task_io_sort_factor
 #   $mapreduce_map_java_opts
 #   $mapreduce_child_java_opts
-#   $mapreduce_intermediate_compression   - If true, intermediate MapReduce data
-#                                           will be compressed with Snappy.  Default: true.
-#   $mapreduce_final_compession           - If true, Final output of MapReduce
-#                                           jobs will be compressed with Snappy. Default: false.
+#   $mapreduce_intermediate_compression       - If true, intermediate MapReduce data
+#                                               will be compressed.  Default: true.
+#   Rmapreduce_intermediate_compression_codec - Codec class to use for intermediate compression.
+#                                               Default: org.apache.hadoop.io.compress.DefaultCodec
+#   $mapreduce_output_compession              - If true, final output of MapReduce
+#                                               jobs will be compressed. Default: false.
+#   $mapreduce_output_compession_codec        - Codec class to use for final output compression.
+#                                               Default: org.apache.hadoop.io.compress.DefaultCodec
+#   $mapreduce_output_compession_type         - Whether to output compress on BLOCK or RECORD level.
+#                                               Default: RECORD
 #   $yarn_nodemanager_resource_memory_mb
-#   $yarn_resourcemanager_scheduler_class - If you change this (e.g. to
-#                                           FairScheduler), you should also provide
-#                                           your own scheduler config .xml files
-#                                           outside of the cdh4 module.
+#   $yarn_resourcemanager_scheduler_class     - If you change this (e.g. to
+#                                               FairScheduler), you should also provide
+#                                               your own scheduler config .xml files
+#                                               outside of the cdh4 module.
 #   $use_yarn
-#   $ganglia_hosts                        - Set this to an array of ganglia host:ports
-#                                           if you want to enable ganglia sinks in hadoop-metrics2.properites
-#   $net_topology_script_template         - Puppet ERb template path  to script that will be
-#                                           invoked to resolve node names to row or rack assignments.
-#                                           Default: undef
+#   $ganglia_hosts                            - Set this to an array of ganglia host:ports
+#                                               if you want to enable ganglia sinks in hadoop-metrics2.properites
+#   $net_topology_script_template             - Puppet ERb template path  to script that will be
+#                                               invoked to resolve node names to row or rack assignments.
+#                                               Default: undef
 #
 class cdh4::hadoop(
     $namenode_hosts,
     $dfs_name_dir,
 
-    $config_directory                        = $::cdh4::hadoop::defaults::config_directory,
+    $config_directory                            = $::cdh4::hadoop::defaults::config_directory,
 
-    $nameservice_id                          = $::cdh4::hadoop::defaults::nameservice_id,
-    $journalnode_hosts                       = $::cdh4::hadoop::defaults::journalnode_hosts,
-    $dfs_journalnode_edits_dir               = $::cdh4::hadoop::defaults::dfs_journalnode_edits_dir,
+    $nameservice_id                              = $::cdh4::hadoop::defaults::nameservice_id,
+    $journalnode_hosts                           = $::cdh4::hadoop::defaults::journalnode_hosts,
+    $dfs_journalnode_edits_dir                   = $::cdh4::hadoop::defaults::dfs_journalnode_edits_dir,
 
-    $datanode_mounts                         = $::cdh4::hadoop::defaults::datanode_mounts,
-    $dfs_data_path                           = $::cdh4::hadoop::defaults::dfs_data_path,
+    $datanode_mounts                             = $::cdh4::hadoop::defaults::datanode_mounts,
+    $dfs_data_path                               = $::cdh4::hadoop::defaults::dfs_data_path,
 
-    $yarn_local_path                         = $::cdh4::hadoop::defaults::yarn_local_path,
-    $yarn_logs_path                          = $::cdh4::hadoop::defaults::yarn_logs_path,
-    $dfs_block_size                          = $::cdh4::hadoop::defaults::dfs_block_size,
-    $enable_jmxremote                        = $::cdh4::hadoop::defaults::enable_jmxremote,
-    $enable_webhdfs                          = $::cdh4::hadoop::defaults::enable_webhdfs,
-    $io_file_buffer_size                     = $::cdh4::hadoop::defaults::io_file_buffer_size,
-    $mapreduce_system_dir                    = $::cdh4::hadoop::defaults::mapreduce_system_dir,
-    $mapreduce_map_tasks_maximum             = $::cdh4::hadoop::defaults::mapreduce_map_tasks_maximum,
-    $mapreduce_reduce_tasks_maximum          = $::cdh4::hadoop::defaults::mapreduce_reduce_tasks_maximum,
-    $mapreduce_job_reuse_jvm_num_tasks       = $::cdh4::hadoop::defaults::mapreduce_job_reuse_jvm_num_tasks,
-    $mapreduce_reduce_shuffle_parallelcopies = $::cdh4::hadoop::defaults::mapreduce_reduce_shuffle_parallelcopies,
-    $mapreduce_map_memory_mb                 = $::cdh4::hadoop::defaults::mapreduce_map_memory_mb,
-    $mapreduce_reduce_memory_mb              = $::cdh4::hadoop::defaults::mapreduce_reduce_memory_mb,
-    $mapreduce_task_io_sort_mb               = $::cdh4::hadoop::defaults::mapreduce_task_io_sort_mb,
-    $mapreduce_task_io_sort_factor           = $::cdh4::hadoop::defaults::mapreduce_task_io_sort_factor,
-    $mapreduce_map_java_opts                 = $::cdh4::hadoop::defaults::mapreduce_map_java_opts,
-    $mapreduce_reduce_java_opts              = $::cdh4::hadoop::defaults::mapreduce_reduce_java_opts,
-    $mapreduce_intermediate_compression      = $::cdh4::hadoop::defaults::mapreduce_intermediate_compression,
-    $mapreduce_final_compession              = $::cdh4::hadoop::defaults::mapreduce_final_compession,
-    $yarn_nodemanager_resource_memory_mb     = $::cdh4::hadoop::defaults::yarn_nodemanager_resource_memory_mb,
-    $yarn_resourcemanager_scheduler_class    = $::cdh4::hadoop::defaults::yarn_resourcemanager_scheduler_class,
-    $use_yarn                                = $::cdh4::hadoop::defaults::use_yarn,
-    $ganglia_hosts                           = $::cdh4::hadoop::defaults::ganglia_hosts,
-    $net_topology_script_template            = $::cdh4::hadoop::defaults::net_topology_script_template
+    $yarn_local_path                             = $::cdh4::hadoop::defaults::yarn_local_path,
+    $yarn_logs_path                              = $::cdh4::hadoop::defaults::yarn_logs_path,
+    $dfs_block_size                              = $::cdh4::hadoop::defaults::dfs_block_size,
+    $enable_jmxremote                            = $::cdh4::hadoop::defaults::enable_jmxremote,
+    $enable_webhdfs                              = $::cdh4::hadoop::defaults::enable_webhdfs,
+    $io_file_buffer_size                         = $::cdh4::hadoop::defaults::io_file_buffer_size,
+    $mapreduce_system_dir                        = $::cdh4::hadoop::defaults::mapreduce_system_dir,
+    $mapreduce_map_tasks_maximum                 = $::cdh4::hadoop::defaults::mapreduce_map_tasks_maximum,
+    $mapreduce_reduce_tasks_maximum              = $::cdh4::hadoop::defaults::mapreduce_reduce_tasks_maximum,
+    $mapreduce_job_reuse_jvm_num_tasks           = $::cdh4::hadoop::defaults::mapreduce_job_reuse_jvm_num_tasks,
+    $mapreduce_reduce_shuffle_parallelcopies     = $::cdh4::hadoop::defaults::mapreduce_reduce_shuffle_parallelcopies,
+    $mapreduce_map_memory_mb                     = $::cdh4::hadoop::defaults::mapreduce_map_memory_mb,
+    $mapreduce_reduce_memory_mb                  = $::cdh4::hadoop::defaults::mapreduce_reduce_memory_mb,
+    $mapreduce_task_io_sort_mb                   = $::cdh4::hadoop::defaults::mapreduce_task_io_sort_mb,
+    $mapreduce_task_io_sort_factor               = $::cdh4::hadoop::defaults::mapreduce_task_io_sort_factor,
+    $mapreduce_map_java_opts                     = $::cdh4::hadoop::defaults::mapreduce_map_java_opts,
+    $mapreduce_reduce_java_opts                  = $::cdh4::hadoop::defaults::mapreduce_reduce_java_opts,
+    $mapreduce_intermediate_compression          = $::cdh4::hadoop::defaults::mapreduce_intermediate_compression,
+    $mapreduce_intermediate_compression_codec    = $::cdh4::hadoop::defaults::mapreduce_intermediate_compression_codec,
+    $mapreduce_output_compression                = $::cdh4::hadoop::defaults::mapreduce_output_compession,
+    $mapreduce_output_compression_codec          = $::cdh4::hadoop::defaults::mapreduce_output_compession_codec,
+    $mapreduce_output_compression_type           = $::cdh4::hadoop::defaults::mapreduce_output_compression_type,
+    $yarn_nodemanager_resource_memory_mb         = $::cdh4::hadoop::defaults::yarn_nodemanager_resource_memory_mb,
+    $yarn_resourcemanager_scheduler_class        = $::cdh4::hadoop::defaults::yarn_resourcemanager_scheduler_class,
+    $use_yarn                                    = $::cdh4::hadoop::defaults::use_yarn,
+    $ganglia_hosts                               = $::cdh4::hadoop::defaults::ganglia_hosts,
+    $net_topology_script_template                = $::cdh4::hadoop::defaults::net_topology_script_template
 ) inherits cdh4::hadoop::defaults
 {
     # JMX Ports
