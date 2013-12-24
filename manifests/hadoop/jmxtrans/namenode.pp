@@ -1,4 +1,4 @@
-# == Class cdh4::hadoop::namenode::jmxtrans
+# == Class cdh4::hadoop::jmxtrans::namenode
 # Sets up a jmxtrans instance for a Hadoop NameNode
 # running on the current host.
 # Note: This requires the jmxtrans puppet module found at
@@ -16,11 +16,11 @@
 # $log_level     - level at which jmxtrans should log.   Default: info
 #
 # == Usage
-# class { 'cdh4::hadoop::namenode::jmxtrans':
+# class { 'cdh4::hadoop::jmxtrans::namenode':
 #     ganglia => 'ganglia.example.org:8649'
 # }
 #
-class cdh4::hadoop::namenode::jmxtrans(
+class cdh4::hadoop::jmxtrans::namenode(
     $jmx_port       = $cdh4::hadoop::defaults::namenode_jmxremote_port,
     $ganglia        = undef,
     $graphite       = undef,
@@ -31,6 +31,7 @@ class cdh4::hadoop::namenode::jmxtrans(
 ) inherits cdh4::hadoop::defaults
 {
     $jmx = "${::fqdn}:${jmx_port}"
+    $group_name = 'Hadoop.NameNode'
 
     class {'::jmxtrans':
         run_interval => $run_interval,
@@ -38,7 +39,9 @@ class cdh4::hadoop::namenode::jmxtrans(
     }
 
     # query for metrics from Hadoop NameNode's JVM
-    jmxtrans::metrics::jvm { $jmx:
+    jmxtrans::metrics::jvm { 'hadoop-hdfs-namenode':
+        jmx                  => $jmx,
+        group_prefix         => "${group_name}.",
         outfile              => $outfile,
         ganglia              => $ganglia,
         graphite             => $graphite,
@@ -50,7 +53,7 @@ class cdh4::hadoop::namenode::jmxtrans(
         undef   => [
             {
                 'name'          => 'Hadoop:name=FSNamesystem,service=NameNode',
-                'resultAlias'   => 'Hadoop.NameNode.FSNamesystem',
+                'resultAlias'   => "${group_name}.FSNamesystem",
                 'attrs'         => {
                     'BlockCapacity'                      => { 'slope' => 'both' },
                     'BlocksTotal'                        => { 'slope' => 'both' },
@@ -82,7 +85,7 @@ class cdh4::hadoop::namenode::jmxtrans(
 
             {
                 'name'          => 'Hadoop:name=FSNamesystemState,service=NameNode',
-                'resultAlias'   => 'Hadoop.NameNode.FSNamesystemState',
+                'resultAlias'   => "${group_name}.FSNamesystemState",
                 'attrs'         => {
                     'BlocksTotal'                        => { 'slope' => 'both' },
                     'CapacityRemaining'                  => { 'slope' => 'both' },
@@ -102,7 +105,7 @@ class cdh4::hadoop::namenode::jmxtrans(
 
             {
                 'name'          => 'Hadoop:name=JvmMetrics,service=NameNode',
-                'resultAlias'   => 'Hadoop.NameNode.JvmMetrics',
+                'resultAlias'   => "${group_name}.JvmMetrics",
                 'attrs'         => {
                     'GcCount'                            => { 'slope' => 'positive' },
                     'GcCountPS MarkSweep'                => { 'slope' => 'positive' },
@@ -130,7 +133,7 @@ class cdh4::hadoop::namenode::jmxtrans(
 
             {
                 'name'          => 'Hadoop:name=NameNodeActivity,service=NameNode',
-                'resultAlias'   => 'Hadoop.NameNode.NameNodeActivity',
+                'resultAlias'   => "${group_name}.NameNodeActivity",
                 'attrs'         => {
                     'AddBlockOps'                        => { 'slope' => 'positive' },
                     'BlockReportAvgTime'                 => { 'slope' => 'both' },
@@ -161,7 +164,7 @@ class cdh4::hadoop::namenode::jmxtrans(
 
             {
                 'name'          => 'Hadoop:name=NameNodeInfo,service=NameNode',
-                'resultAlias'   => 'Hadoop.NameNode.NameNodeInfo',
+                'resultAlias'   => "${group_name}.NameNodeInfo",
                 'attrs'         => {
                     'BlockPoolUsedSpace'                 => { 'slope' => 'both' },
                     'Free'                               => { 'slope' => 'both' },
@@ -182,7 +185,7 @@ class cdh4::hadoop::namenode::jmxtrans(
 
             {
                 'name'          => 'Hadoop:name=RpcActivityForPort8020,service=NameNode',
-                'resultAlias'   => 'Hadoop.NameNode.RpcActivityForPort8020',
+                'resultAlias'   => "${group_name}.RpcActivityForPort8020",
                 'attrs'         => {
                     'CallQueueLength'                    => { 'slope' => 'both' },
                     'NumOpenConnections'                 => { 'slope' => 'both' },
@@ -208,9 +211,9 @@ class cdh4::hadoop::namenode::jmxtrans(
         jmx                  => $jmx,
         outfile              => $outfile,
         ganglia              => $ganglia,
-        ganglia_group_name   => 'hadoop',
+        ganglia_group_name   => $group_name,
         graphite             => $graphite,
-        graphite_root_prefix => 'hadoop',
+        graphite_root_prefix => $group_name,
         objects              => $namenode_objects,
     }
 }
