@@ -12,6 +12,8 @@
 # $objects       - objects parameter to pass to jmxtrans::metrics.  Only use
 #                  this if you need to override the default ones that this
 #                  class provides.
+# $run_interval  - How often jmxtrans should run.        Default: 15
+# $log_level     - level at which jmxtrans should log.   Default: info
 #
 # == Usage
 # class { 'cdh4::hadoop::namenode::jmxtrans':
@@ -19,14 +21,21 @@
 # }
 #
 class cdh4::hadoop::namenode::jmxtrans(
-    $jmx_port    = $cdh4::hadoop::defaults::namenode_jmxremote_port,
-    $ganglia     = undef,
-    $graphite    = undef,
-    $outfile     = undef,
-    $objects     = undef,
+    $jmx_port       = $cdh4::hadoop::defaults::namenode_jmxremote_port,
+    $ganglia        = undef,
+    $graphite       = undef,
+    $outfile        = undef,
+    $objects        = undef,
+    $run_interval   = 15,
+    $log_level      = 'info',
 ) inherits cdh4::hadoop::defaults
 {
     $jmx = "${::fqdn}:${jmx_port}"
+
+    class {'::jmxtrans':
+        run_interval => $run_interval,
+        log_level    => $log_level,
+    }
 
     # query for metrics from Hadoop NameNode's JVM
     jmxtrans::metrics::jvm { $jmx:
@@ -187,76 +196,6 @@ class cdh4::hadoop::namenode::jmxtrans(
                     'RpcQueueTimeAvgTime'                => { 'slope' => 'both' },
                     'RpcQueueTimeNumOps'                 => { 'slope' => 'positive' },
                     'SentBytes'                          => { 'slope' => 'positive' },
-                },
-            },
-
-
-            {
-                'name'          => 'Hadoop:name=RpcDetailedActivityForPort8020,service=NameNode',
-                'resultAlias'   => 'Hadoop.NameNode.RpcDetailedActivityForPort8020',
-                'attrs'         => {
-                    'AbandonBlockAvgTime'                => { 'slope' => 'both' },
-                    'AbandonBlockNumOps'                 => { 'slope' => 'positive' },
-                    'AddBlockAvgTime'                    => { 'slope' => 'both' },
-                    'AddBlockNumOps'                     => { 'slope' => 'positive' },
-                    'BlockReceivedAndDeletedAvgTime'     => { 'slope' => 'both' },
-                    'BlockReceivedAndDeletedNumOps'      => { 'slope' => 'positive' },
-                    'BlockReportAvgTime'                 => { 'slope' => 'both' },
-                    'BlockReportNumOps'                  => { 'slope' => 'positive' },
-                    'CommitBlockSynchronizationAvgTime'  => { 'slope' => 'both' },
-                    'CommitBlockSynchronizationNumOps'   => { 'slope' => 'positive' },
-                    'CompleteAvgTime'                    => { 'slope' => 'both' },
-                    'CompleteNumOps'                     => { 'slope' => 'positive' },
-                    'CreateAvgTime'                      => { 'slope' => 'both' },
-                    'CreateNumOps'                       => { 'slope' => 'positive' },
-                    'DeleteAvgTime'                      => { 'slope' => 'both' },
-                    'DeleteNumOps'                       => { 'slope' => 'positive' },
-                    'FsyncAvgTime'                       => { 'slope' => 'both' },
-                    'FsyncNumOps'                        => { 'slope' => 'positive' },
-                    'GetAdditionalDatanodeAvgTime'       => { 'slope' => 'both' },
-                    'GetAdditionalDatanodeNumOps'        => { 'slope' => 'positive' },
-                    'GetBlockLocationsAvgTime'           => { 'slope' => 'both' },
-                    'GetBlockLocationsNumOps'            => { 'slope' => 'positive' },
-                    'GetContentSummaryAvgTime'           => { 'slope' => 'both' },
-                    'GetContentSummaryNumOps'            => { 'slope' => 'positive' },
-                    'GetFileInfoAvgTime'                 => { 'slope' => 'both' },
-                    'GetFileInfoNumOps'                  => { 'slope' => 'positive' },
-                    'GetListingAvgTime'                  => { 'slope' => 'both' },
-                    'GetListingNumOps'                   => { 'slope' => 'positive' },
-                    'GetServerDefaultsAvgTime'           => { 'slope' => 'both' },
-                    'GetServerDefaultsNumOps'            => { 'slope' => 'positive' },
-                    'GetServiceStatusAvgTime'            => { 'slope' => 'both' },
-                    'GetServiceStatusNumOps'             => { 'slope' => 'positive' },
-                    'MkdirsAvgTime'                      => { 'slope' => 'both' },
-                    'MkdirsNumOps'                       => { 'slope' => 'positive' },
-                    'MonitorHealthAvgTime'               => { 'slope' => 'both' },
-                    'MonitorHealthNumOps'                => { 'slope' => 'positive' },
-                    'RegisterDatanodeAvgTime'            => { 'slope' => 'both' },
-                    'RegisterDatanodeNumOps'             => { 'slope' => 'positive' },
-                    'Rename2AvgTime'                     => { 'slope' => 'both' },
-                    'Rename2NumOps'                      => { 'slope' => 'positive' },
-                    'RenameAvgTime'                      => { 'slope' => 'both' },
-                    'RenameNumOps'                       => { 'slope' => 'positive' },
-                    'RenewLeaseAvgTime'                  => { 'slope' => 'both' },
-                    'RenewLeaseNumOps'                   => { 'slope' => 'positive' },
-                    'RollEditLogAvgTime'                 => { 'slope' => 'both' },
-                    'RollEditLogNumOps'                  => { 'slope' => 'positive' },
-                    'SendHeartbeatAvgTime'               => { 'slope' => 'both' },
-                    'SendHeartbeatNumOps'                => { 'slope' => 'positive' },
-                    'SetOwnerAvgTime'                    => { 'slope' => 'both' },
-                    'SetOwnerNumOps'                     => { 'slope' => 'positive' },
-                    'SetPermissionAvgTime'               => { 'slope' => 'both' },
-                    'SetPermissionNumOps'                => { 'slope' => 'positive' },
-                    'SetReplicationAvgTime'              => { 'slope' => 'both' },
-                    'SetReplicationNumOps'               => { 'slope' => 'positive' },
-                    'TransitionToActiveAvgTime'          => { 'slope' => 'both' },
-                    'TransitionToActiveNumOps'           => { 'slope' => 'positive' },
-                    'UpdateBlockForPipelineAvgTime'      => { 'slope' => 'both' },
-                    'UpdateBlockForPipelineNumOps'       => { 'slope' => 'positive' },
-                    'UpdatePipelineAvgTime'              => { 'slope' => 'both' },
-                    'UpdatePipelineNumOps'               => { 'slope' => 'positive' },
-                    'VersionRequestAvgTime'              => { 'slope' => 'both' },
-                    'VersionRequestNumOps'               => { 'slope' => 'positive' },
                 },
             },
         ],
