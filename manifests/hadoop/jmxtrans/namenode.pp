@@ -33,11 +33,6 @@ class cdh4::hadoop::jmxtrans::namenode(
     $jmx = "${::fqdn}:${jmx_port}"
     $group_name = 'Hadoop.NameNode'
 
-    class {'::jmxtrans':
-        run_interval => $run_interval,
-        log_level    => $log_level,
-    }
-
     # query for metrics from Hadoop NameNode's JVM
     jmxtrans::metrics::jvm { 'hadoop-hdfs-namenode':
         jmx                  => $jmx,
