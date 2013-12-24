@@ -110,14 +110,6 @@ class cdh4::hadoop(
     $net_topology_script_template                = $::cdh4::hadoop::defaults::net_topology_script_template
 ) inherits cdh4::hadoop::defaults
 {
-    # JMX Ports
-    $namenode_jmxremote_port           = 9980
-    $datanode_jmxremote_port           = 9981
-    $secondary_namenode_jmxremote_port = 9982
-    $resourcemanager_jmxremote_port    = 9983
-    $nodemanager_jmxremote_port        = 9984
-    $proxyserver_jmxremote_port        = 9985
-
     # If $dfs_name_dir is a list, this will be the
     # first entry in the list.  Else just $dfs_name_dir.
     # This used in a couple of execs throughout this module.
