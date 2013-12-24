@@ -12,8 +12,6 @@
 # $objects       - objects parameter to pass to jmxtrans::metrics.  Only use
 #                  this if you need to override the default ones that this
 #                  class provides.
-# $run_interval  - How often jmxtrans should run.        Default: 15
-# $log_level     - level at which jmxtrans should log.   Default: info
 #
 # == Usage
 # class { 'cdh4::hadoop::jmxtrans::resourcemanager':
@@ -26,8 +24,6 @@ class cdh4::hadoop::jmxtrans::resourcemanager(
     $graphite       = undef,
     $outfile        = undef,
     $objects        = undef,
-    $run_interval   = 15,
-    $log_level      = 'info',
 ) inherits cdh4::hadoop::defaults
 {
     $jmx = "${::fqdn}:${jmx_port}"
