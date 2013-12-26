@@ -5,7 +5,7 @@
 # https://github.com/wikimedia/puppet-jmxtrans.
 #
 # == Parameters
-# $jmx_port      - NameNode JMX port.  Default: 9980
+# $jmx_port      - ResourceManager JMX port.  Default: 9983
 # $ganglia       - Ganglia host:port
 # $graphite      - Graphite host:port
 # $outfile       - outfile to which Kafka stats will be written.
@@ -29,7 +29,7 @@ class cdh4::hadoop::jmxtrans::resourcemanager(
     $jmx = "${::fqdn}:${jmx_port}"
     $group_name = 'Hadoop.ResourceManager'
 
-    # query for metrics from Hadoop NameNode's JVM
+    # query for metrics from Hadoop ResourceManager's JVM
     jmxtrans::metrics::jvm { 'hadoop-hdfs-resourcemanager':
         jmx                  => $jmx,
         group_prefix         => "${group_name}.",
@@ -141,6 +141,7 @@ class cdh4::hadoop::jmxtrans::resourcemanager(
 
             {
                 'name'          => 'Hadoop:name=QueueMetrics,q0=root,q1=default,service=ResourceManager,user=hdfs',
+                'resultAlias'   => "${group_name}.QueueMetrics,q0=root,q1=default,user=hdfs",
                 'attrs'         => {
                     'ActiveApplications'               => { 'slope' => 'both' },
                     'ActiveUsers'                      => { 'slope' => 'both' },
@@ -224,6 +225,7 @@ class cdh4::hadoop::jmxtrans::resourcemanager(
 
             {
                 'name'          => 'Hadoop:name=QueueMetrics,q0=root,service=ResourceManager,user=dr.who',
+                'resultAlias'   => "${group_name}.QueueMetrics,q0=root,user=dr.who",
                 'attrs'         => {
                     'ActiveApplications'               => { 'slope' => 'both' },
                     'ActiveUsers'                      => { 'slope' => 'both' },
@@ -251,6 +253,7 @@ class cdh4::hadoop::jmxtrans::resourcemanager(
 
             {
                 'name'          => 'Hadoop:name=QueueMetrics,q0=root,service=ResourceManager,user=hdfs',
+                'resultAlias'   => "${group_name}.QueueMetrics,q0=root,user=hdfs",
                 'attrs'         => {
                     'ActiveApplications'               => { 'slope' => 'both' },
                     'ActiveUsers'                      => { 'slope' => 'both' },

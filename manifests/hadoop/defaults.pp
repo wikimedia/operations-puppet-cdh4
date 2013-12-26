@@ -42,7 +42,6 @@ class cdh4::hadoop::defaults {
     # JMX Ports (These are not currently configurable)
     $namenode_jmxremote_port           = 9980
     $datanode_jmxremote_port           = 9981
-    $secondary_namenode_jmxremote_port = 9982
     $resourcemanager_jmxremote_port    = 9983
     $nodemanager_jmxremote_port        = 9984
     $proxyserver_jmxremote_port        = 9985
