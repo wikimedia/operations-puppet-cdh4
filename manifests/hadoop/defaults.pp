@@ -27,6 +27,7 @@ class cdh4::hadoop::defaults {
     $mapreduce_task_io_sort_factor            = undef
     $mapreduce_map_java_opts                  = undef
     $mapreduce_reduce_java_opts               = undef
+    $mapreduce_shuffle_port                   = undef
     $mapreduce_intermediate_compression       = false
     $mapreduce_intermediate_compression_codec = 'org.apache.hadoop.io.compress.DefaultCodec'
     $mapreduce_output_compression             = false

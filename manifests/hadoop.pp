@@ -46,6 +46,7 @@
 #   $mapreduce_task_io_sort_factor
 #   $mapreduce_map_java_opts
 #   $mapreduce_child_java_opts
+#   $mapreduce_shuffle_port
 #   $mapreduce_intermediate_compression       - If true, intermediate MapReduce data
 #                                               will be compressed.  Default: true.
 #   Rmapreduce_intermediate_compression_codec - Codec class to use for intermediate compression.
@@ -98,6 +99,7 @@ class cdh4::hadoop(
     $mapreduce_task_io_sort_factor               = $::cdh4::hadoop::defaults::mapreduce_task_io_sort_factor,
     $mapreduce_map_java_opts                     = $::cdh4::hadoop::defaults::mapreduce_map_java_opts,
     $mapreduce_reduce_java_opts                  = $::cdh4::hadoop::defaults::mapreduce_reduce_java_opts,
+    $mapreduce_shuffle_port                      = $::cdh4::hadoop::defaults::mapreduce_shuffle_port,
     $mapreduce_intermediate_compression          = $::cdh4::hadoop::defaults::mapreduce_intermediate_compression,
     $mapreduce_intermediate_compression_codec    = $::cdh4::hadoop::defaults::mapreduce_intermediate_compression_codec,
     $mapreduce_output_compression                = $::cdh4::hadoop::defaults::mapreduce_output_compession,

@@ -32,6 +32,13 @@
     <value>/user/history/done</value>
   </property>
 
+<% if @mapreduce_shuffle_port -%>
+  <property>
+    <name>mapreduce.shuffle.port</name>
+    <value><%= @mapreduce_shuffle_port %></value>
+  </property>
+
+<% end -%>
   <property>
     <name>mapred.job.tracker</name>
      <!-- Hue gets confused if mapred.job.tracker is not set,
