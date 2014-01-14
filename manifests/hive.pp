@@ -20,6 +20,11 @@
 #                                  Default: org.apache.derby.jdbc.EmbeddedDriver
 # $jdbc_protocol                 - Metastore JDBC protocol.  Default: mysql
 #
+# $db_root_username              - username for metastore database creation commands. Default: undef
+# $db_root_password              - password for metastore database creation commands.
+#                                  Only set these if your root user cannot issue database
+#                                  commands without a different username and password.
+#                                  Default: undef
 # $exec_parallel_thread_number   - Number of jobs at most can be executed in parallel.
 #                                  Set this to 0 to disable parallel execution.
 # $optimize_skewjoin             - Enable or disable skew join optimization.
@@ -51,6 +56,9 @@ class cdh4::hive(
     $jdbc_port                   = $cdh4::hive::defaults::jdbc_port,
     $jdbc_driver                 = $cdh4::hive::defaults::jdbc_driver,
     $jdbc_protocol               = $cdh4::hive::defaults::jdbc_protocol,
+
+    $db_root_username            = $cdh4::hive::defaults::db_root_username,
+    $db_root_password            = $cdh4::hive::defaults::db_root_password,
 
     $exec_parallel_thread_number = $cdh4::hive::defaults::exec_parallel_thread_number,
     $optimize_skewjoin           = $cdh4::hive::defaults::optimize_skewjoin,

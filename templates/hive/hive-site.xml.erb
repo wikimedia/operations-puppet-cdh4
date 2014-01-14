@@ -38,19 +38,19 @@ if (@metastore_host == @fqdn)
     <description>Driver class name for a JDBC metastore</description>
   </property>
 
-  <% if @jdbc_username -%>
+<% if @jdbc_username -%>
   <property>
     <name>javax.jdo.option.ConnectionUserName</name>
     <value><%= @jdbc_username %></value>
   </property>
-  <% end -%>
+<% end -%>
 
-  <% if @jdbc_password and @jdbc_password.empty? == false -%>
+<% if @jdbc_password and @jdbc_password.empty? == false -%>
   <property>
     <name>javax.jdo.option.ConnectionPassword</name>
     <value><%= @jdbc_password %></value>
   </property>
-  <% end -%>
+<% end -%>
 
   <property>
     <name>datanucleus.autoCreateSchema</name>

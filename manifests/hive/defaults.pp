@@ -12,6 +12,9 @@ class cdh4::hive::defaults {
     $jdbc_username               = 'hive'
     $jdbc_password               = 'hive'
 
+    $db_root_username            = undef
+    $db_root_password            = undef
+
     $exec_parallel_thread_number = 8  # set this to 0 to disable hive.exec.parallel
     $optimize_skewjoin           = false
     $skewjoin_key                = 10000

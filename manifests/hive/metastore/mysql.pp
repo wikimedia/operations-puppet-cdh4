@@ -36,22 +36,33 @@ class cdh4::hive::metastore::mysql($schema_version = '0.10.0') {
     $db_user = $cdh4::hive::jdbc_username
     $db_pass = $cdh4::hive::jdbc_password
 
+    # Only use -u or -p flag to mysql commands if
+    # root username or root password are set.
+    $username_option = $cdh4::hive::db_root_username ? {
+        undef   => '',
+        default => "-u'${cdh4::hive::db_root_username}'",
+    }
+    $password_option = $cdh4::hive::db_root_password ? {
+        undef   => '',
+        default => "-p'${cdh4::hive::db_root_password}'",
+    }
+
     # hive is going to need an hive database and user.
     exec { 'hive_mysql_create_database':
-        command => "/usr/bin/mysql -e \"
+        command => "/usr/bin/mysql ${username_option} ${password_option} -e \"
 CREATE DATABASE ${db_name}; USE ${db_name};
 SOURCE /usr/lib/hive/scripts/metastore/upgrade/mysql/hive-schema-${schema_version}.mysql.sql;\"",
-        unless  => "/usr/bin/mysql -e 'SHOW DATABASES' | /bin/grep -q ${db_name}",
+        unless  => "/usr/bin/mysql ${username_option} ${password_option} -e 'SHOW DATABASES' | /bin/grep -q ${db_name}",
         user    => 'root',
     }
     exec { 'hive_mysql_create_user':
-        command => "/usr/bin/mysql -e \"
+        command => "/usr/bin/mysql ${username_option} ${password_option}  -e \"
 CREATE USER '${db_user}'@'localhost' IDENTIFIED BY '${db_pass}';
 CREATE USER '${db_user}'@'127.0.0.1' IDENTIFIED BY '${db_pass}';
 GRANT ALL PRIVILEGES ON ${db_name}.* TO '${db_user}'@'localhost' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON ${db_name}.* TO '${db_user}'@'127.0.0.1' WITH GRANT OPTION;
 FLUSH PRIVILEGES;\"",
-        unless  => "/usr/bin/mysql -e \"SHOW GRANTS FOR '${db_user}'@'127.0.0.1'\" | grep -q \"TO '${db_user}'\"",
+        unless  => "/usr/bin/mysql ${username_option} ${password_option} -e \"SHOW GRANTS FOR '${db_user}'@'127.0.0.1'\" | grep -q \"TO '${db_user}'\"",
         user    => 'root',
     }
 }
