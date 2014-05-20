@@ -357,8 +357,26 @@
 
     -->
 
-    <!-- Default proxyuser configuration for Hue -->
 
+    <!-- Allow root, hdfs and hue users to -doas any user -->
+    <property>
+        <name>oozie.service.ProxyUserService.proxyuser.root.hosts</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>oozie.service.ProxyUserService.proxyuser.root.groups</name>
+        <value>*</value>
+    </property>
+    <property>
+        <name>oozie.service.ProxyUserService.proxyuser.hdfs.hosts</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>oozie.service.ProxyUserService.proxyuser.hdfs.groups</name>
+        <value>*</value>
+    </property>
     <property>
         <name>oozie.service.ProxyUserService.proxyuser.hue.hosts</name>
         <value>*</value>
