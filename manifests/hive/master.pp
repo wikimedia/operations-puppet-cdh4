@@ -1,4 +1,4 @@
-# == Class cdh4::hive::master
+# == Class cdh::hive::master
 # Wrapper class for hive::server, hive::metastore, and hive::metastore::* databases.
 #
 # Include this class on your Hive master node with $metastore_database
@@ -11,21 +11,30 @@
 #
 # == Parameters
 # $metastore_database - Name of metastore database to use.  This should be
-#                       the name of a cdh4::hive::metastore::* class in
+#                       the name of a cdh::hive::metastore::* class in
 #                       hive/metastore/*.pp.
+# $heapsize           - -Xmx in MB to pass to hive-server2 and hive-metastore.  Default: undef
 #
-class cdh4::hive::master($metastore_database = 'mysql') {
-    class { 'cdh4::hive::server':    }
-    class { 'cdh4::hive::metastore': }
+class cdh::hive::master(
+    $metastore_database = 'mysql',
+    $heapsize           = undef,
+)
+{
+    class { 'cdh::hive::server':
+        heapsize => $heapsize,
+    }
+    class { 'cdh::hive::metastore':
+        heapsize => $heapsize,
+    }
 
     # Set up the metastore database by including
     # the $metastore_database_class.
-    $metastore_database_class = "cdh4::hive::metastore::${metastore_database}"
+    $metastore_database_class = "cdh::hive::metastore::${metastore_database}"
     if ($metastore_database) {
         class { $metastore_database_class: }
     }
 
     # Make sure the $metastore_database_class is included and set up
     # before we start the hive-metastore service
-    Class[$metastore_database_class] -> Class['cdh4::hive::metastore']
+    Class[$metastore_database_class] -> Class['cdh::hive::metastore']
 }

@@ -1,4 +1,4 @@
-# == Class cdh4::hadoop::jmxtrans::nodemanager
+# == Class cdh::hadoop::jmxtrans::nodemanager
 # Sets up a jmxtrans instance for a Hadoop NodeManager
 # running on the current host.
 # Note: This requires the jmxtrans puppet module found at
@@ -14,17 +14,17 @@
 #                  class provides.
 #
 # == Usage
-# class { 'cdh4::hadoop::jmxtrans::nodemanager':
+# class { 'cdh::hadoop::jmxtrans::nodemanager':
 #     ganglia => 'ganglia.example.org:8649'
 # }
 #
-class cdh4::hadoop::jmxtrans::nodemanager(
-    $jmx_port       = $cdh4::hadoop::defaults::nodemanager_jmxremote_port,
+class cdh::hadoop::jmxtrans::nodemanager(
+    $jmx_port       = $cdh::hadoop::defaults::nodemanager_jmxremote_port,
     $ganglia        = undef,
     $graphite       = undef,
     $outfile        = undef,
     $objects        = undef,
-) inherits cdh4::hadoop::defaults
+) inherits cdh::hadoop::defaults
 {
     $jmx = "${::fqdn}:${jmx_port}"
     $group_name = 'Hadoop.NodeManager'

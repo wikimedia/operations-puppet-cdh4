@@ -1,5 +1,5 @@
 #
-# == Class cdh4::hadoop
+# == Class cdh::hadoop
 #
 # Installs the main Hadoop/HDFS packages and config files.  This
 # By default this will set Hadoop config files to run YARN (MapReduce 2).
@@ -19,13 +19,14 @@
 #                                 configuring Hadoop with HA NameNodes.
 #   $dfs_name_dir               - Path to hadoop NameNode name directory.  This
 #                                 can be an array of paths or a single string path.
-#   $nameservice_id             - Arbitrary logical HDFS cluster name.  Only set this
-#                                 if you want to use HA NameNode.
+#   $cluster_name               - Arbitrary logical HDFS cluster name.  This will be used
+#                                 as the nameserivce id if you set $ha_enabled to true.
+#                                 Default: 'cdh'.
+#   $ha_enabled                 - Enable High Availability NameNodes.
 #   $journalnode_hosts          - Array of JournalNode hosts.  This will be ignored
-#                                 if $nameservice_id is not set.
+#                                 if $ha_enabled is false.
 #   $dfs_journalnode_edits_dir  - Path to JournalNode edits dir.  This will be
-#                                 ignored if $nameservice_id is not set.
-#   $config_directory           - Path of the hadoop config directory.
+#                                 ignored if $ha_enabled is false.
 #   $datanode_mounts            - Array of JBOD mount points.  Hadoop datanode and
 #                                 mapreduce/yarn directories will be here.
 #   $dfs_data_path              - Path relative to JBOD mount point for HDFS data directories.
@@ -61,8 +62,9 @@
 #   $yarn_resourcemanager_scheduler_class     - If you change this (e.g. to
 #                                               FairScheduler), you should also provide
 #                                               your own scheduler config .xml files
-#                                               outside of the cdh4 module.
-#   $use_yarn
+#                                               outside of the cdh module.
+#   $hadoop_heapsize                          - -Xmx for NameNode and DataNode.  Default: undef
+#   $yarn_heapsize                            - -Xmx for YARN Daemons.           Default: undef
 #   $ganglia_hosts                            - Set this to an array of ganglia host:ports
 #                                               if you want to enable ganglia sinks in hadoop-metrics2.properites
 #   $net_topology_script_template             - Puppet ERb template path  to script that will be
@@ -73,70 +75,75 @@
 #                                             - Needs: logstash-gelf.jar (https://github.com/mp911de/logstash-gelf/releases)
 #   $gelf_logging_host                        - Destination host for GELF output. Default is localhost.
 #   $gelf_logging_port                        - Destination port for GELF output. Default is 12201.
+#   $fair_scheduler_template                  - The fair-scheduler.xml queue configuration template.
+#                                               If you set this to false or undef, FairScheduler will
+#                                               be disabled.  Default: cdh/hadoop/fair-scheduler.xml.erb
 #
-class cdh4::hadoop(
+class cdh::hadoop(
     $namenode_hosts,
     $dfs_name_dir,
+    $cluster_name                                = $::cdh::hadoop::defaults::cluster_name,
+    $ha_enabled                                  = $::cdh::hadoop::defaults::ha_enabled,
+    $journalnode_hosts                           = $::cdh::hadoop::defaults::journalnode_hosts,
+    $dfs_journalnode_edits_dir                   = $::cdh::hadoop::defaults::dfs_journalnode_edits_dir,
 
-    $config_directory                            = $::cdh4::hadoop::defaults::config_directory,
+    $datanode_mounts                             = $::cdh::hadoop::defaults::datanode_mounts,
+    $dfs_data_path                               = $::cdh::hadoop::defaults::dfs_data_path,
 
-    $nameservice_id                              = $::cdh4::hadoop::defaults::nameservice_id,
-    $journalnode_hosts                           = $::cdh4::hadoop::defaults::journalnode_hosts,
-    $dfs_journalnode_edits_dir                   = $::cdh4::hadoop::defaults::dfs_journalnode_edits_dir,
-
-    $datanode_mounts                             = $::cdh4::hadoop::defaults::datanode_mounts,
-    $dfs_data_path                               = $::cdh4::hadoop::defaults::dfs_data_path,
-
-    $yarn_local_path                             = $::cdh4::hadoop::defaults::yarn_local_path,
-    $yarn_logs_path                              = $::cdh4::hadoop::defaults::yarn_logs_path,
-    $dfs_block_size                              = $::cdh4::hadoop::defaults::dfs_block_size,
-    $enable_jmxremote                            = $::cdh4::hadoop::defaults::enable_jmxremote,
-    $enable_webhdfs                              = $::cdh4::hadoop::defaults::enable_webhdfs,
-    $io_file_buffer_size                         = $::cdh4::hadoop::defaults::io_file_buffer_size,
-    $mapreduce_system_dir                        = $::cdh4::hadoop::defaults::mapreduce_system_dir,
-    $mapreduce_map_tasks_maximum                 = $::cdh4::hadoop::defaults::mapreduce_map_tasks_maximum,
-    $mapreduce_reduce_tasks_maximum              = $::cdh4::hadoop::defaults::mapreduce_reduce_tasks_maximum,
-    $mapreduce_job_reuse_jvm_num_tasks           = $::cdh4::hadoop::defaults::mapreduce_job_reuse_jvm_num_tasks,
-    $mapreduce_reduce_shuffle_parallelcopies     = $::cdh4::hadoop::defaults::mapreduce_reduce_shuffle_parallelcopies,
-    $mapreduce_map_memory_mb                     = $::cdh4::hadoop::defaults::mapreduce_map_memory_mb,
-    $mapreduce_reduce_memory_mb                  = $::cdh4::hadoop::defaults::mapreduce_reduce_memory_mb,
-    $mapreduce_task_io_sort_mb                   = $::cdh4::hadoop::defaults::mapreduce_task_io_sort_mb,
-    $mapreduce_task_io_sort_factor               = $::cdh4::hadoop::defaults::mapreduce_task_io_sort_factor,
-    $mapreduce_map_java_opts                     = $::cdh4::hadoop::defaults::mapreduce_map_java_opts,
-    $mapreduce_reduce_java_opts                  = $::cdh4::hadoop::defaults::mapreduce_reduce_java_opts,
-    $mapreduce_shuffle_port                      = $::cdh4::hadoop::defaults::mapreduce_shuffle_port,
-    $mapreduce_intermediate_compression          = $::cdh4::hadoop::defaults::mapreduce_intermediate_compression,
-    $mapreduce_intermediate_compression_codec    = $::cdh4::hadoop::defaults::mapreduce_intermediate_compression_codec,
-    $mapreduce_output_compression                = $::cdh4::hadoop::defaults::mapreduce_output_compession,
-    $mapreduce_output_compression_codec          = $::cdh4::hadoop::defaults::mapreduce_output_compession_codec,
-    $mapreduce_output_compression_type           = $::cdh4::hadoop::defaults::mapreduce_output_compression_type,
-    $yarn_nodemanager_resource_memory_mb         = $::cdh4::hadoop::defaults::yarn_nodemanager_resource_memory_mb,
-    $yarn_resourcemanager_scheduler_class        = $::cdh4::hadoop::defaults::yarn_resourcemanager_scheduler_class,
-    $use_yarn                                    = $::cdh4::hadoop::defaults::use_yarn,
-    $ganglia_hosts                               = $::cdh4::hadoop::defaults::ganglia_hosts,
-    $net_topology_script_template                = $::cdh4::hadoop::defaults::net_topology_script_template,
-    $gelf_logging_enabled                        = $::cdh4::hadoop::defaults::gelf_logging_enabled,
-    $gelf_logging_host                           = $::cdh4::hadoop::defaults::gelf_logging_host,
-    $gelf_logging_port                           = $::cdh4::hadoop::defaults::gelf_logging_port,
-) inherits cdh4::hadoop::defaults
+    $yarn_local_path                             = $::cdh::hadoop::defaults::yarn_local_path,
+    $yarn_logs_path                              = $::cdh::hadoop::defaults::yarn_logs_path,
+    $dfs_block_size                              = $::cdh::hadoop::defaults::dfs_block_size,
+    $enable_jmxremote                            = $::cdh::hadoop::defaults::enable_jmxremote,
+    $webhdfs_enabled                             = $::cdh::hadoop::defaults::webhdfs_enabled,
+    $httpfs_enabled                              = $::cdh::hadoop::defaults::httpfs_enabled,
+    $io_file_buffer_size                         = $::cdh::hadoop::defaults::io_file_buffer_size,
+    $mapreduce_system_dir                        = $::cdh::hadoop::defaults::mapreduce_system_dir,
+    $mapreduce_map_tasks_maximum                 = $::cdh::hadoop::defaults::mapreduce_map_tasks_maximum,
+    $mapreduce_reduce_tasks_maximum              = $::cdh::hadoop::defaults::mapreduce_reduce_tasks_maximum,
+    $mapreduce_job_reuse_jvm_num_tasks           = $::cdh::hadoop::defaults::mapreduce_job_reuse_jvm_num_tasks,
+    $mapreduce_reduce_shuffle_parallelcopies     = $::cdh::hadoop::defaults::mapreduce_reduce_shuffle_parallelcopies,
+    $mapreduce_map_memory_mb                     = $::cdh::hadoop::defaults::mapreduce_map_memory_mb,
+    $mapreduce_reduce_memory_mb                  = $::cdh::hadoop::defaults::mapreduce_reduce_memory_mb,
+    $mapreduce_task_io_sort_mb                   = $::cdh::hadoop::defaults::mapreduce_task_io_sort_mb,
+    $mapreduce_task_io_sort_factor               = $::cdh::hadoop::defaults::mapreduce_task_io_sort_factor,
+    $mapreduce_map_java_opts                     = $::cdh::hadoop::defaults::mapreduce_map_java_opts,
+    $mapreduce_reduce_java_opts                  = $::cdh::hadoop::defaults::mapreduce_reduce_java_opts,
+    $mapreduce_shuffle_port                      = $::cdh::hadoop::defaults::mapreduce_shuffle_port,
+    $mapreduce_intermediate_compression          = $::cdh::hadoop::defaults::mapreduce_intermediate_compression,
+    $mapreduce_intermediate_compression_codec    = $::cdh::hadoop::defaults::mapreduce_intermediate_compression_codec,
+    $mapreduce_output_compression                = $::cdh::hadoop::defaults::mapreduce_output_compession,
+    $mapreduce_output_compression_codec          = $::cdh::hadoop::defaults::mapreduce_output_compession_codec,
+    $mapreduce_output_compression_type           = $::cdh::hadoop::defaults::mapreduce_output_compression_type,
+    $yarn_nodemanager_resource_memory_mb         = $::cdh::hadoop::defaults::yarn_nodemanager_resource_memory_mb,
+    $hadoop_heapsize                             = $::cdh::hadoop::defaults::hadoop_heapsize,
+    $yarn_heapsize                               = $::cdh::hadoop::defaults::yarn_heapsize,
+    $ganglia_hosts                               = $::cdh::hadoop::defaults::ganglia_hosts,
+    $net_topology_script_template                = $::cdh::hadoop::defaults::net_topology_script_template,
+    $gelf_logging_enabled                        = $::cdh::hadoop::defaults::gelf_logging_enabled,
+    $gelf_logging_host                           = $::cdh::hadoop::defaults::gelf_logging_host,
+    $gelf_logging_port                           = $::cdh::hadoop::defaults::gelf_logging_port,
+    $fair_scheduler_template                     = $::cdh::hadoop::defaults::fair_scheduler_template,
+) inherits cdh::hadoop::defaults
 {
     # If $dfs_name_dir is a list, this will be the
     # first entry in the list.  Else just $dfs_name_dir.
     # This used in a couple of execs throughout this module.
     $dfs_name_dir_main = inline_template('<%= (dfs_name_dir.class == Array) ? dfs_name_dir[0] : dfs_name_dir %>')
 
-    # Set a boolean for use in logic elsewhere to
-    # determine if HA NameNode will be used.
-    $ha_enabled = $nameservice_id ? {
-        undef   => false,
-        default => true,
+    # if $ha_enabled is true, use $cluster_name as $nameservice_id
+    $nameservice_id = $ha_enabled ? {
+        true    => $cluster_name,
+        default => undef,
     }
+
+    # Config files are installed into a directory
+    # based on the value of $cluster_name.
+    $config_directory = "/etc/hadoop/conf.${cluster_name}"
 
     # Parameter Validation:
     if ($ha_enabled and !$journalnode_hosts) {
         fail('Must provide multiple $journalnode_hosts when using HA and setting $nameservice_id.')
     }
-
 
     # Assume the primary namenode is the first entry in $namenode_hosts,
     # Set a variable here for reference in other classes.
@@ -152,15 +159,14 @@ class cdh4::hadoop(
         ensure => 'installed'
     }
 
-    # All config files require hadoop-client package.
-    File {
-        require => Package['hadoop-client']
+    # Create the $cluster_name based $config_directory.
+    file { $config_directory:
+        ensure  => 'directory',
+        require => Package['hadoop-client'],
     }
-
-    # ensure for yarn specific config files.
-    $yarn_ensure = $use_yarn ? {
-        false   => 'absent',
-        default => 'present',
+    cdh::alternative { 'hadoop-conf':
+        link    => '/etc/hadoop/conf',
+        path    => $config_directory,
     }
 
     # Render net-topology.sh from $net_topology_script_template
@@ -182,39 +188,41 @@ class cdh4::hadoop(
         }
     }
 
-
     file { "${config_directory}/log4j.properties":
-        content => template('cdh4/hadoop/log4j.properties.erb'),
+        content => template('cdh/hadoop/log4j.properties.erb'),
     }
 
     file { "${config_directory}/core-site.xml":
-        content => template('cdh4/hadoop/core-site.xml.erb'),
+        content => template('cdh/hadoop/core-site.xml.erb'),
     }
 
     file { "$config_directory/hdfs-site.xml":
-        content => template('cdh4/hadoop/hdfs-site.xml.erb'),
-    }
-
-    file {"$config_directory/httpfs-site.xml":
-        content => template('cdh4/hadoop/httpfs-site.xml.erb'),
+        content => template('cdh/hadoop/hdfs-site.xml.erb'),
     }
 
     file { "${config_directory}/hadoop-env.sh":
-        content => template('cdh4/hadoop/hadoop-env.sh.erb'),
+        content => template('cdh/hadoop/hadoop-env.sh.erb'),
     }
 
     file { "${config_directory}/mapred-site.xml":
-        content => template('cdh4/hadoop/mapred-site.xml.erb'),
+        content => template('cdh/hadoop/mapred-site.xml.erb'),
     }
 
     file { "${config_directory}/yarn-site.xml":
-        ensure  => $yarn_ensure,
-        content => template('cdh4/hadoop/yarn-site.xml.erb'),
+        content => template('cdh/hadoop/yarn-site.xml.erb'),
     }
 
     file { "${config_directory}/yarn-env.sh":
-        ensure  => $yarn_ensure,
-        content => template('cdh4/hadoop/yarn-env.sh.erb'),
+        content => template('cdh/hadoop/yarn-env.sh.erb'),
+    }
+
+    # If this is set, FairScheduler will be enabled
+    # and this file will be used to configure
+    # FairScheduler queues.
+    if $fair_scheduler_template {
+        file { "${config_directory}/fair-scheduler.xml":
+            content => template($fair_scheduler_template),
+        }
     }
 
     # Render hadoop-metrics2.properties
@@ -225,7 +233,7 @@ class cdh4::hadoop(
     }
     file { "${config_directory}/hadoop-metrics2.properties":
         ensure  => $hadoop_metrics2_ensure,
-        content => template('cdh4/hadoop/hadoop-metrics2.properties.erb'),
+        content => template('cdh/hadoop/hadoop-metrics2.properties.erb'),
     }
 
     # If the current node is meant to be JournalNode,
@@ -236,6 +244,6 @@ class cdh4::hadoop(
             ($::ipaddress      and $::ipaddress      in $journalnode_hosts) or
             ($::ipaddress_eth1 and $::ipaddress_eth1 in $journalnode_hosts)))
     {
-            include cdh4::hadoop::journalnode
+            include cdh::hadoop::journalnode
     }
 }

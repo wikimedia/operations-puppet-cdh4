@@ -1,8 +1,8 @@
-# == Class cdh4::oozie
+# == Class cdh::oozie
 # Installs the oozie-client package
 # And sets OOZIE_URL in /etc/profile.d/oozie.sh.
 #
-class cdh4::oozie(
+class cdh::oozie(
     $oozie_host = 'localhost'
 )
 {

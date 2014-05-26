@@ -1,42 +1,45 @@
 # Description
 
 Puppet module to install and manage components of
-Cloudera's Distribution 4 (CDH4) for Apache Hadoop.
+Cloudera's Distribution (CDH) for Apache Hadoop.
 
-NOTE: The main puppet-cdh4 repository is hosted in WMF Gerrit at
-[operations/puppet/cdh4](https://gerrit.wikimedia.org/r/#/admin/projects/operations/puppet/cdh4).
+NOTE: The main puppet-cdh repository is hosted in WMF Gerrit at
+[operations/puppet/cdh](https://gerrit.wikimedia.org/r/#/admin/projects/operations/puppet/cdh).
 
 
-Installs HDFS, YARN or MR1, Hive, HBase, Pig, Sqoop, Zookeeper, Oozie and
+Installs HDFS, YARN, Hive, Pig, Sqoop (1), Oozie and
 Hue.  Note that, in order for this module to work, you will have to ensure
 that:
 
-- Sun JRE version 6 or greater is installed
+- Java version 7 or greater is installed
 - Your package manager is configured with a repository containing the
-  Cloudera 4 packages.
+  Cloudera 5 packages.
 
 **Notes:**
 
 - In general, services managed by this module do not subscribe to their relevant
-config files.  This prevents accidental deployments of config changes.  If you
-make config changes in puppet, you must apply puppet and then manually restart
-the relevant services.
-- This module has only been tested using CDH 4.2.1 on Ubuntu Precise 12.04.2 LTS
+  config files.  This prevents accidental deployments of config changes.  If you
+  make config changes in puppet, you must apply puppet and then manually restart
+  the relevant services.
+- This module has only been tested using CDH 5.0.1 on Ubuntu Precise 12.04.2 LTS
 - Many of the above mentioned services are not yet implemented in v0.2.
   See the v0.1 branch if you'd like to use these now.
+- Zookeeper is not puppetized in this module, as Debian/Ubuntu provides
+  a different and suitable Zookeeper package.  To puppetize Zookeeper Servers,
+  See the [puppet-zookeeper](https://github.com/wikimedia/puppet-zookeeper) module.
 
 
 # Installation
 
-Clone (or copy) this repository into your puppet modules/cdh4 directory:
+Clone (or copy) this repository into your puppet modules/cdh directory:
 ```bash
-git clone git://github.com/wikimedia/puppet-cdh4.git modules/cdh4
+git clone git://github.com/wikimedia/puppet-cdh.git modules/cdh
 ```
 
 Or you could also use a git submodule:
 ```bash
-git submodule add git://github.com/wikimedia/puppet-cdh4.git modules/cdh4
-git commit -m 'Adding modules/cdh4 as a git submodule.'
+git submodule add git://github.com/wikimedia/puppet-cdh.git modules/cdh
+git commit -m 'Adding modules/cdh as a git submodule.'
 git submodule init && git submodule update
 ```
 
@@ -44,11 +47,11 @@ git submodule init && git submodule update
 
 ## Hadoop Clients
 
-All Hadoop enabled nodes should include the ```cdh4::hadoop``` class.
+All Hadoop enabled nodes should include the ```cdh::hadoop``` class.
 
 ```puppet
 class my::hadoop {
-    class { 'cdh4::hadoop':
+    class { 'cdh::hadoop':
         # Must pass an array of hosts here, even if you are
         # not using HA and only have a single NameNode.
         namenode_hosts     => ['namenode1.domain.org'],
@@ -67,20 +70,18 @@ node 'hadoop-client.domain.org' {
 }
 ```
 
-This will ensure that CDH4 client packages are installed, and that
+This will ensure that CDH5 client packages are installed, and that
 Hadoop related config files are in place with proper settings.
 
 The datanode_mounts parameter assumes that you want to keep your
-DataNode and YARN/MRv1 specific data in subdirectories in each of the mount
+DataNode and YARN specific data in subdirectories in each of the mount
 points provided.
-
-If you would like to use MRv1 instead of YARN, set ```use_yarn``` to false.
 
 ## Hadoop master
 
 ```puppet
 class my::hadoop::master inherits my::hadoop {
-    include cdh4::hadoop::master
+    include cdh::hadoop::master
 }
 
 node 'namenode1.domain.org' {
@@ -96,7 +97,7 @@ and set up the JobTracker.
 
 ```puppet
 class my::hadoop::worker inherits my::hadoop {
-    include cdh4::hadoop::worker
+    include cdh::hadoop::worker
 }
 
 node 'datanode[1234].domain.org' {
@@ -111,17 +112,17 @@ TaskTracker.
 ## High Availability NameNode
 
 For detailed documentation, see the
-[CDH4 High Availability Guide](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/4.2.1/CDH4-High-Availability-Guide/CDH4-High-Availability-Guide.html).
+[CDH5 High Availability Guide](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH5/latest/CDH5-High-Availability-Guide/cdh5hag_hdfs_ha_config.html).
 
 This puppet module only supports Quorum-based HA storage using JournalNodes.
 It does not support NFS based HA.
 
 Your JournalNodes will be automatically configured based on the value of
-```$cdh4::hadoop::journalnode_hosts```.  When ```cdh4::hadoop``` is included,
+```$cdh::hadoop::journalnode_hosts```.  When ```cdh::hadoop``` is included,
 if the current hostname or IP address matches a value in the $journalnode_hosts
-array, then ```cdh4::hadoop::journalnode``` will be included.
+array, then ```cdh::hadoop::journalnode``` will be included.
 
-Before applying ```cdh4::hadoop::journalnode```, make sure the
+Before applying ```cdh::hadoop::journalnode```, make sure the
 ```dfs_journalnode_edits_dir``` is partitioned and mounted on each of the hosts
 in ```journalnode_hosts```.
 
@@ -131,13 +132,13 @@ time, it will talk to the JournalNodes and tell them to initialize their shared
 edits directories.  If you are adding HA to an existing cluster, you will need
 to initialize your JournalNodes manually.  See section below on how to do this.
 
-You'll need to set two extra parameters on the ```cdh4::hadoop``` class on all
+You'll need to set two extra parameters on the ```cdh::hadoop``` class on all
 your hadoop nodes, as well as specify the hosts of your standby NameNodes.
 
 ```puppet
 
 class my::hadoop {
-    class { 'cdh4::hadoop':
+    class { 'cdh::hadoop':
         nameservice_id      => 'mycluster',
         namenode_hosts      => [
             'namenode1.domain.org',
@@ -167,18 +168,18 @@ Note the differences from the non-HA setup:
 - An arbitrary ```nameservice_id``` has been specified.  This will be the
 logical name of your HDFS cluster.
 - Multiple ```namenode_hosts``` have been given.  You will need to include
-```cdh4::hadoop::namenode::standby``` on your standby NameNodes.
+```cdh::hadoop::namenode::standby``` on your standby NameNodes.
 - ```journalnode_hosts``` have been specified.
 
-On your standby NameNodes, instead of including ```cdh4::hadoop::master```,
-include ```cdh4::hadoop::namenode::standby```:
+On your standby NameNodes, instead of including ```cdh::hadoop::master```,
+include ```cdh::hadoop::namenode::standby```:
 
 ``` puppet
 class my::hadoop::master inherits my::hadoop {
-    include cdh4::hadoop::master
+    include cdh::hadoop::master
 }
 class my::hadoop::standby inherits my::hadoop {
-    include cdh4::hadoop::namenode::standby
+    include cdh::hadoop::namenode::standby
 }
 
 node 'namenode1.domain.org' {
@@ -190,7 +191,7 @@ node 'namenode2.domain.org' {
 }
 ```
 
-Including ```cdh4::hadoop::namenode::standby``` will bootstrap the standby
+Including ```cdh::hadoop::namenode::standby``` will bootstrap the standby
 NameNode from the primary NameNode and start the standby NameNode service.
 
 When are setting up brand new Hadoop cluster with HA, you should apply your
@@ -245,8 +246,6 @@ sudo service hadoop-yarn-nodemanager start
 sudo service hadoop-hdfs-datanode start
 ```
 
-*Note: replace 'hadoop-yarn-' services above with 'hadoop-0.20-mapreduce-' services if you are using MRv1 instead of YARN.*
-
 When there are multiple NameNodes and automatic failover is not configured
 (it is not yet supported by this puppet module), both NameNodes start up
 in standby mode.  You will have to manually transition one of them to active.
@@ -265,7 +264,7 @@ with dot ('.') characters replaced with dashes ('-').  E.g.  ```namenode1-domain
 ## Hive Clients
 
 ```puppet
-class { 'cdh4::hive':
+class { 'cdh::hive':
   metastore_host  => 'hive-metastore-node.domain.org',
   zookeeper_hosts => ['zk1.domain.org', 'zk2.domain.org'],
   jdbc_password   => $secret_password,
@@ -274,10 +273,10 @@ class { 'cdh4::hive':
 
 ## Hive Master (hive-server2 and hive-metastore)
 
-Include the same ```cdh4::hive``` class as indicated above, and then:
+Include the same ```cdh::hive``` class as indicated above, and then:
 
 ```puppet
-class { 'cdh4::hive::master': }
+class { 'cdh::hive::master': }
 ```
 
 By default, a Hive metastore backend MySQL database will be used.  You must
@@ -286,7 +285,7 @@ If you want to disable automatic setup of your metastore backend
 database, set the ```metastore_database``` parameter to undef:
 
 ```puppet
-class { 'cdh4::hive::master':
+class { 'cdh::hive::master':
   metastore_database => undef,
 }
 ```
@@ -296,7 +295,7 @@ class { 'cdh4::hive::master':
 ## Oozie Clients
 
 ```puppet
-class { 'cdh4::oozie': }
+class { 'cdh::oozie': }
 ```
 
 ## Oozie Server
@@ -308,7 +307,7 @@ automatically installable backend database.  Alternatively, you may set
 Oozie database manually.
 
 ```puppet
-class { 'cdh4::oozie::server:
+class { 'cdh::oozie::server:
   jdbc_password -> $secret_password,
 }
 ```
@@ -319,21 +318,15 @@ class { 'cdh4::oozie::server:
 To install hue server, simply:
 
 ```puppet
-class { 'cdh4::hue':
-    secret_key => 'ii7nnoCGtP0wjub6nqnRfQx93YUV3iWG', # your secret key here.
+class { 'cdh::hue':
+    secret_key       => 'ii7nnoCGtP0wjub6nqnRfQx93YUV3iWG', # your secret key here.
+    hive_server_host => 'hive.example.com',
 }
 ```
 
-There are many more parameters to the ```cdh4::hue``` class.  See the class
+There are many more parameters to the ```cdh::hue``` class.  See the class
 documentation in manifests/hue.pp.
 
-Note that while much of this puppet-cdh4 module supports MRv1, this Hue
-puppetization currently does not.  (Feel free to submit a patch to add
-MRv1 support though!)
 
-If you include ```cdh4::hive``` or ```cdh4::oozie``` classes on this node,
+If you include ```cdh::hive``` or ```cdh::oozie``` classes on this node,
 Hue will be configured to run its Hive and Oozie apps.
-
-Hue Impala is not currently supported, since Impala hasn't been puppetized
-in this module yet.
-

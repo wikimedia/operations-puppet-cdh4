@@ -1,7 +1,7 @@
-# == Class cdh4::hadoop::journalnode
+# == Class cdh::hadoop::journalnode
 #
-class cdh4::hadoop::journalnode {
-    Class['cdh4::hadoop'] -> Class['cdh4::hadoop::journalnode']
+class cdh::hadoop::journalnode {
+    Class['cdh::hadoop'] -> Class['cdh::hadoop::journalnode']
 
     # install jobtracker daemon package
     package { 'hadoop-hdfs-journalnode':
@@ -9,7 +9,7 @@ class cdh4::hadoop::journalnode {
     }
 
     # Ensure that the journanode edits directory has the correct permissions.
-    file { $::cdh4::hadoop::dfs_journalnode_edits_dir:
+    file { $::cdh::hadoop::dfs_journalnode_edits_dir:
         ensure  => 'directory',
         owner   => 'hdfs',
         group   => 'hdfs',
@@ -24,6 +24,6 @@ class cdh4::hadoop::journalnode {
         hasstatus  => true,
         hasrestart => true,
         alias      => 'journalnode',
-        require    => File[$::cdh4::hadoop::dfs_journalnode_edits_dir],
+        require    => File[$::cdh::hadoop::dfs_journalnode_edits_dir],
     }
 }

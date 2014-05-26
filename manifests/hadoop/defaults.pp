@@ -1,10 +1,9 @@
-# == Class cdh4::hadoop::defaults
-# Default parameters for cdh4::hadoop configuration.
+# == Class cdh::hadoop::defaults
+# Default parameters for cdh::hadoop configuration.
 #
-class cdh4::hadoop::defaults {
-    $config_directory                         = '/etc/hadoop/conf'
-
-    $nameservice_id                           = undef
+class cdh::hadoop::defaults {
+    $cluster_name = 'cdh'
+    $ha_enabled                               = false
     $journalnode_hosts                        = undef
     $dfs_journalnode_edits_dir                = undef
 
@@ -14,7 +13,8 @@ class cdh4::hadoop::defaults {
     $yarn_logs_path                           = 'yarn/logs'
     $dfs_block_size                           = 67108864 # 64MB default
     $enable_jmxremote                         = true
-    $enable_webhdfs                           = true
+    $webhdfs_enabled                          = false
+    $httpfs_enabled                           = true
     $mapreduce_system_dir                     = undef
     $io_file_buffer_size                      = undef
     $mapreduce_map_tasks_maximum              = undef
@@ -34,14 +34,16 @@ class cdh4::hadoop::defaults {
     $mapreduce_output_compression_codec       = 'org.apache.hadoop.io.compress.DefaultCodec'
     $mapreduce_output_compression_type        = 'RECORD'
     $yarn_nodemanager_resource_memory_mb      = undef
-    $yarn_resourcemanager_scheduler_class     = undef
-    $use_yarn                                 = true
+    $fair_scheduler_template                  = 'cdh/hadoop/fair-scheduler.xml.erb'
+
+    $hadoop_heapsize                          = undef
+    $yarn_heapsize                            = undef
+
     $ganglia_hosts                            = undef
     $net_topology_script_template             = undef
     $gelf_logging_enabled                     = false
     $gelf_logging_host                        = 'localhost'
     $gelf_logging_port                        = 12201
-
 
     # JMX Ports (These are not currently configurable)
     $namenode_jmxremote_port           = 9980

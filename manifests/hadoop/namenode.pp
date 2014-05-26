@@ -1,28 +1,28 @@
-# == Class cdh4::hadoop::namenode
+# == Class cdh::hadoop::namenode
 # Installs and configureds Hadoop NameNode.
 # This will format the NameNode if it is not
 # already formatted.  It will also create
 # a common HDFS directory hierarchy.
 #
 # Note:  If you are using HA NameNode (indicated by setting
-# cdh4::hadoop::nameservice_id), your JournalNodes should be running before
+# cdh::hadoop::nameservice_id), your JournalNodes should be running before
 # this class is applied.
 #
-class cdh4::hadoop::namenode {
-    Class['cdh4::hadoop'] -> Class['cdh4::hadoop::namenode']
+class cdh::hadoop::namenode {
+    Class['cdh::hadoop'] -> Class['cdh::hadoop::namenode']
 
     # install namenode daemon package
     package { 'hadoop-hdfs-namenode':
         ensure => installed
     }
 
-    file { "${::cdh4::hadoop::config_directory}/hosts.exclude":
+    file { "${::cdh::hadoop::config_directory}/hosts.exclude":
         ensure  => 'present',
         require => Package['hadoop-hdfs-namenode'],
     }
 
     # Ensure that the namenode directory has the correct permissions.
-    file { $::cdh4::hadoop::dfs_name_dir:
+    file { $::cdh::hadoop::dfs_name_dir:
         ensure  => 'directory',
         owner   => 'hdfs',
         group   => 'hdfs',
@@ -35,9 +35,9 @@ class cdh4::hadoop::namenode {
     # the namenode service is started.
     exec { 'hadoop-namenode-format':
         command => '/usr/bin/hdfs namenode -format',
-        creates => "${::cdh4::hadoop::dfs_name_dir_main}/current/VERSION",
+        creates => "${::cdh::hadoop::dfs_name_dir_main}/current/VERSION",
         user    => 'hdfs',
-        require => File[$::cdh4::hadoop::dfs_name_dir],
+        require => File[$::cdh::hadoop::dfs_name_dir],
     }
 
     service { 'hadoop-hdfs-namenode':
@@ -46,6 +46,6 @@ class cdh4::hadoop::namenode {
         hasstatus  => true,
         hasrestart => true,
         alias      => 'namenode',
-        require    => [File["${::cdh4::hadoop::config_directory}/hosts.exclude"], Exec['hadoop-namenode-format']],
+        require    => [File["${::cdh::hadoop::config_directory}/hosts.exclude"], Exec['hadoop-namenode-format']],
     }
 }

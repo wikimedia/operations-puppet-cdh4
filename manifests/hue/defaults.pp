@@ -1,22 +1,39 @@
-# == Class cdh4::hue::defaults
+# == Class cdh::hue::defaults
 #
-class cdh4::hue::defaults {
+class cdh::hue::defaults {
     $http_host                = '0.0.0.0'
     $http_port                = 8888
     $secret_key               = undef
+    $app_blacklist            = ['hbase', 'impala', 'search', 'spark', 'rdbms', 'zookeeper']
+
+    $hive_server_host         = undef
 
     # Set Hue Oozie defaults to those already
-    # set in the cdh4::oozie class.
-    if (defined(Class['cdh4::oozie'])) {
-        $oozie_url                = $cdh4::oozie::url
-        # Is this the proper default values?  I'm not sure.
-        $oozie_security_enabled   = $cdh4::hue::defaults::oozie_security_enabled
+    # set in the cdh::oozie class.
+    if (defined(Class['cdh::oozie'])) {
+        $oozie_url            = $cdh::oozie::url
+        $oozie_proxy_regex    = "$cdh::oozie::oozie_host:(11000|11443)"
     }
     # Otherwise disable Oozie interface for Hue.
     else {
-        $oozie_url                = undef
-        $oozie_security_enabled   = undef
+        $oozie_url            = undef
+        $oozie_proxy_regex    = ''
+
     }
+    $oozie_security_enabled   = false
+
+    # local variable to use in inline_template below
+    $namenode_hosts = $cdh::hadoop::namenode_hosts
+    $proxy_whitelist          = [
+        # namenode + resourcemanager + history server host and ports
+        inline_template("(<%= @namenode_hosts.join('|') %>):(50070|50470|8088|19888)"),
+        # Oozie Web UI.
+        $oozie_proxy_regex,
+        # No way to determine DataNode or NodeManager hostname defaults.
+        # If you want to restrict this, make sure you override $proxy_whitelist parameter.
+        '.+:(50075|8042)',
+    ]
+    $proxy_blacklist          = undef
 
     $smtp_host                = 'localhost'
     $smtp_port                = 25
@@ -26,10 +43,6 @@ class cdh4::hue::defaults {
 
     $ssl_private_key          = '/etc/ssl/private/hue.key'
     $ssl_certificate          = '/etc/ssl/certs/hue.cert'
-
-    # if httpfs is enabled, the default httpfs port
-    # will be used, instead of the webhdfs port.
-    $httpfs_enabled           = false
 
     $ldap_url                 = undef
     $ldap_cert                = undef
@@ -44,6 +57,7 @@ class cdh4::hue::defaults {
     $ldap_group_name_attr     = undef
     $ldap_group_member_attr   = undef
 
-    $hue_ini_template         = 'cdh4/hue/hue.ini.erb'
-
+    $hue_ini_template         = 'cdh/hue/hue.ini.erb'
+    $hue_log4j_template       = 'cdh/hue/log4j.properties.erb'
+    $hue_log_conf_template    = 'cdh/hue/log.conf.erb'
 }

@@ -1,4 +1,4 @@
-# == Define cdh4::hadoop::worker::paths
+# == Define cdh::hadoop::worker::paths
 #
 # Ensures directories needed for Hadoop Worker nodes
 # are created with proper ownership and permissions.
@@ -15,7 +15,7 @@
 # $basedir   - base path for directory creation.  Default: $title
 #
 # == Usage:
-# cdh4::hadoop::worker::paths { ['/mnt/hadoop/data/a', '/mnt/hadoop/data/b']: }
+# cdh::hadoop::worker::paths { ['/mnt/hadoop/data/a', '/mnt/hadoop/data/b']: }
 #
 # The above declaration will ensure that the following directory hierarchy exists:
 #       /mnt/hadoop/data/a
@@ -33,12 +33,12 @@
 #
 # (If you use MRv1 instead of yarn, the hierarchy will be slightly different.)
 #
-define cdh4::hadoop::worker::paths($basedir = $title) {
-    Class['cdh4::hadoop'] -> Cdh4::Hadoop::Worker::Paths[$title]
+define cdh::hadoop::worker::paths($basedir = $title) {
+    Class['cdh::hadoop'] -> Cdh::Hadoop::Worker::Paths[$title]
 
     # hdfs, hadoop, and yarn users
     # are all added by packages
-    # installed by cdh4::hadoop
+    # installed by cdh::hadoop
 
     # make sure mounts exist
     file { $basedir:
@@ -50,9 +50,9 @@ define cdh4::hadoop::worker::paths($basedir = $title) {
 
     # Assume that $dfs_data_path is two levels.  e.g. hdfs/dn
     # We need to manage the parent directory too.
-    $dfs_data_path_parent = inline_template("<%= File.dirname('${::cdh4::hadoop::dfs_data_path}') %>")
+    $dfs_data_path_parent = inline_template("<%= File.dirname('${::cdh::hadoop::dfs_data_path}') %>")
     # create DataNode directories
-    file { ["${basedir}/${dfs_data_path_parent}", "${basedir}/${::cdh4::hadoop::dfs_data_path}"]:
+    file { ["${basedir}/${dfs_data_path_parent}", "${basedir}/${::cdh::hadoop::dfs_data_path}"]:
         ensure  => 'directory',
         owner   => 'hdfs',
         group   => 'hdfs',
@@ -60,23 +60,11 @@ define cdh4::hadoop::worker::paths($basedir = $title) {
         require => File[$basedir],
     }
 
-    if $::cdh4::hadoop::use_yarn {
-        # create yarn local directories
-        file { ["${basedir}/yarn", "${basedir}/yarn/local", "${basedir}/yarn/logs"]:
-            ensure  => 'directory',
-            owner   => 'yarn',
-            group   => 'yarn',
-            mode    => '0755',
-        }
-    }
-    else {
-        # Create MRv1 local directories.
-        # See: http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/4.2.0/CDH4-Installation-Guide/cdh4ig_topic_11_3.html
-        file { ["${basedir}/mapred", "${basedir}/mapred/local"]:
-            ensure  => 'directory',
-            owner   => 'mapred',
-            group   => 'hadoop',
-            mode    => '0755',
-        }
+    # create yarn local directories
+    file { ["${basedir}/yarn", "${basedir}/yarn/local", "${basedir}/yarn/logs"]:
+        ensure  => 'directory',
+        owner   => 'yarn',
+        group   => 'yarn',
+        mode    => '0755',
     }
 }

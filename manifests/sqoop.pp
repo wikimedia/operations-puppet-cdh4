@@ -1,6 +1,15 @@
-# == Class cdh4::sqoop
-# Installs Sqoop
-class cdh4::sqoop {
+# == Class cdh::sqoop
+# Installs Sqoop 1
+#
+#
+# NOTE: There is no sqoop-conf alternative defined,
+# because there is not yet any sqoop specific
+# configuartion handled by this puppet module.
+#
+class cdh::sqoop {
+    # Sqoop requires Hadoop configs installed.
+    Class['cdh::hadoop'] -> Class['cdh::sqoop']
+
     package { 'sqoop':
         ensure => 'installed',
     }

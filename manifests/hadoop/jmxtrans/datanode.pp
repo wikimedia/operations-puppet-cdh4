@@ -1,4 +1,4 @@
-# == Class cdh4::hadoop::jmxtrans::datanode
+# == Class cdh::hadoop::jmxtrans::datanode
 # Sets up a jmxtrans instance for a Hadoop ResourceManager
 # running on the current host.
 # Note: This requires the jmxtrans puppet module found at
@@ -14,17 +14,17 @@
 #                  class provides.
 #
 # == Usage
-# class { 'cdh4::hadoop::jmxtrans::datanode':
+# class { 'cdh::hadoop::jmxtrans::datanode':
 #     ganglia => 'ganglia.example.org:8649'
 # }
 #
-class cdh4::hadoop::jmxtrans::datanode(
-    $jmx_port       = $cdh4::hadoop::defaults::datanode_jmxremote_port,
+class cdh::hadoop::jmxtrans::datanode(
+    $jmx_port       = $cdh::hadoop::defaults::datanode_jmxremote_port,
     $ganglia        = undef,
     $graphite       = undef,
     $outfile        = undef,
     $objects        = undef,
-) inherits cdh4::hadoop::defaults
+) inherits cdh::hadoop::defaults
 {
     $jmx = "${::fqdn}:${jmx_port}"
     $group_name = 'Hadoop.DataNode'

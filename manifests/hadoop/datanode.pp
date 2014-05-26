@@ -1,8 +1,8 @@
-# == Class cdh4::hadoop::datanode
+# == Class cdh::hadoop::datanode
 # Installs and starts up a Hadoop DataNode.
 #
-class cdh4::hadoop::datanode {
-    Class['cdh4::hadoop'] -> Class['cdh4::hadoop::datanode']
+class cdh::hadoop::datanode {
+    Class['cdh::hadoop'] -> Class['cdh::hadoop::datanode']
 
     # install jobtracker daemon package
     package { 'hadoop-hdfs-datanode':

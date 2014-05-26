@@ -1,27 +1,27 @@
 #!/bin/bash
 
 # NOTE: This file is managed by Puppet.
-# This file has been modified by the wikimedia/puppet-cdh4 module.
+# This file has been modified by the wikimedia/puppet-cdh module.
 # It adds a --chuid flag to start-stop-daemon.  See the comment below,
 # and https://issues.cloudera.org/browse/HUE-1398 for more info.
 
 #
-# (c) Copyright 2011 Cloudera, Inc.
-# Licensed to Cloudera, Inc. under one
-# or more contributor license agreements. See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership. Cloudera, Inc. licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License. You may obtain a copy of the License at
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+
 
 
 ### BEGIN INIT INFO
@@ -38,7 +38,7 @@
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-DAEMON=/usr/share/hue/build/env/bin/supervisor # Introduce the server's location here
+DAEMON=/usr/lib/hue/build/env/bin/supervisor # Introduce the server's location here
 NAME=hue              			# Introduce the short server's name here
 DESC="Hue for Hadoop"                	# Introduce a short description here
 LOGDIR=/var/log/hue  			# Log directory to use
@@ -71,9 +71,8 @@ DAEMONUSER=hue     # Users to run the daemons as. If this value
                         # is set start-stop-daemon will chuid the server
 
 # Include defaults if available
-if [ -f /etc/default/$NAME ] ; then
-    . /etc/default/$NAME
-fi
+BIGTOP_DEFAULTS_DIR=${BIGTOP_DEFAULTS_DIR-/etc/default}
+[ -n "${BIGTOP_DEFAULTS_DIR}" -a -r ${BIGTOP_DEFAULTS_DIR}/$NAME ] && . ${BIGTOP_DEFAULTS_DIR}/$NAME
 
 # Use this if you want the user to explicitly set 'RUN' in
 # /etc/default/
@@ -123,22 +122,22 @@ running() {
 start_server() {
 # Start the process using the wrapper
 	export PYTHON_EGG_CACHE='/tmp/.hue-python-eggs'
-        mkdir -p /usr/share/hue/pids/ 
+        mkdir -p /usr/lib/hue/pids/
         mkdir -p ${PYTHON_EGG_CACHE}
         mkdir -p $(dirname $PIDFILE) $LOGDIR
         chown -R $DAEMONUSER $(dirname $PIDFILE) $LOGDIR ${PYTHON_EGG_CACHE}
         # dont setuid, since supervisor will drop privileges on its
-        # own.
-        # start-stop-daemon --start --quiet --pidfile $PIDFILE \
-        #             --exec $DAEMON -- $DAEMON_OPTS
+        # own
+        #PATH=/usr/lib/hue/build/env/bin:$PATH start-stop-daemon --start --quiet --pidfile $PIDFILE \
+        #            --exec $DAEMON -- $DAEMON_OPTS
 
-        # ===== wikimedia/puppet-cdh4 patch =====
+        # ===== wikimedia/puppet-cdh patch =====
         # THIS IS A BUG!  We need to honor $DAEMONUSER here.
         # supervisor.py is smart enough to know what to do.
         # See https://issues.cloudera.org/browse/HUE-1398.
         # This init.d script will be removed when a newer
         # version of hue (hopefully) fixes this.
-        start-stop-daemon --start --quiet --pidfile $PIDFILE \
+        PATH=/usr/lib/hue/build/env/bin:$PATH start-stop-daemon --start --quiet --pidfile $PIDFILE \
             --chuid $DAEMONUSER --exec $DAEMON -- $DAEMON_OPTS
 
         errcode=$?

@@ -8,30 +8,34 @@
 <configuration>
 
   <property>
-    <name>yarn.resourcemanager.scheduler.address</name>
-    <value><%= @primary_namenode_host %>:8030</value>
-  </property>
-  <property>
-    <name>yarn.resourcemanager.resource-tracker.address</name>
-    <value><%= @primary_namenode_host %>:8031</value>
-  </property>
-  <property>
-    <name>yarn.resourcemanager.address</name>
-    <value><%= @primary_namenode_host %>:8032</value>
-  </property>
-  <property>
-    <name>yarn.resourcemanager.admin.address</name>
-    <value><%= @primary_namenode_host %>:8033</value>
-  </property>
-  <property>
-    <name>yarn.resourcemanager.webapp.address</name>
-    <value>0.0.0.0:8088</value>
+    <name>yarn.resourcemanager.hostname</name>
+    <value><%= @primary_namenode_host %></value>
   </property>
 
-<% if @yarn_resourcemanager_scheduler_class -%>
+<% if @fair_scheduler_template -%>
   <property>
     <name>yarn.resourcemanager.scheduler.class</name>
-    <value><%= yarn_resourcemanager_scheduler_class %></value>
+    <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler</value>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.fair.allocation.file</name>
+    <value><%= @config_directory %>/fair-scheduler.xml</value>
+    <description>
+      Path to allocation file. An allocation file is an XML manifest describing queues
+      and their properties, in addition to certain policy defaults. This file must be
+      in XML format as described in the next section.
+    </description>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.fair.user-as-default-queue</name>
+    <value>false</value>
+    <description>
+      Whether to use the username associated with the allocation as the default queue
+      name, in the event that a queue name is not specified. If this is set to "false"
+      or unset, all jobs have a shared default queue, called "default". Defaults to true.
+    </description>
   </property>
 <% end -%>
 
@@ -50,7 +54,7 @@
 
   <property>
     <name>yarn.nodemanager.aux-services</name>
-    <value>mapreduce.shuffle</value>
+    <value>mapreduce_shuffle</value>
   </property>
 
   <property>
@@ -81,7 +85,7 @@
 <% end -%>
 
   <property>
-    <name>yarn.log-aggregation-enable</name>
+    <name>yarn.log.aggregation.enable</name>
     <value>true</value>
   </property>
 
@@ -91,7 +95,7 @@
     <value>/var/log/hadoop-yarn/apps</value>
   </property>
 
-  
+
   <property>
       <name>yarn.app.mapreduce.am.staging-dir</name>
       <value>/user</value>
@@ -114,7 +118,7 @@
         $HADOOP_COMMON_HOME/*,$HADOOP_COMMON_HOME/lib/*,
         $HADOOP_HDFS_HOME/*,$HADOOP_HDFS_HOME/lib/*,
         $HADOOP_MAPRED_HOME/*,$HADOOP_MAPRED_HOME/lib/*,
-        $YARN_HOME/*,$YARN_HOME/lib/*
+        $HADOOP_YARN_HOME/*,$HADOOP_YARN_HOME/lib/*
      </value>
   </property>
 </configuration>

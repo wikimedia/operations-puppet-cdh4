@@ -1,7 +1,7 @@
 # == Class hive::defaults
 # Default Hive configs
 #
-class cdh4::hive::defaults {
+class cdh::hive::defaults {
     $zookeeper_hosts             = undef
 
     $jdbc_driver                 = 'com.mysql.jdbc.Driver'
@@ -14,6 +14,10 @@ class cdh4::hive::defaults {
 
     $db_root_username            = undef
     $db_root_password            = undef
+
+    # Further path/jar to add to hive's classpath.
+    # Until Hive 0.12.0 this can only be a single path. See HIVE-2269.
+    $auxpath                     = undef
 
     $exec_parallel_thread_number = 8  # set this to 0 to disable hive.exec.parallel
     $optimize_skewjoin           = false
@@ -30,10 +34,7 @@ class cdh4::hive::defaults {
     # This allows us to use custom template config files
     # if we want to override more settings than this
     # module yet supports.
-    $hive_site_template          = 'cdh4/hive/hive-site.xml.erb'
-    $hive_exec_log4j_template    = 'cdh4/hive/hive-exec-log4j.properties.erb'
-
-    # Further path/jar to add to hive's classpath
-    # (Until Hive 0.12.0 this can only be a single path (see HIVE-2269 )
-    $auxpath                     = undef
+    $hive_site_template          = 'cdh/hive/hive-site.xml.erb'
+    $hive_log4j_template         = 'cdh/hive/hive-log4j.properties.erb'
+    $hive_exec_log4j_template    = 'cdh/hive/hive-exec-log4j.properties.erb'
 }

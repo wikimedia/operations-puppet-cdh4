@@ -1,10 +1,10 @@
-# == Class cdh4::hue
+# == Class cdh::hue
 #
 # Installs hue, sets up the hue.ini file
 # and ensures that hue server is running.
-# This requires that cdh4::hadoop is included.
+# This requires that cdh::hadoop is included.
 #
-# If cdh4::hive and/or cdh4::oozie are included
+# If cdh::hive and/or cdh::oozie are included
 # on this node, hue will be configured to interface
 # with hive and oozie.
 #
@@ -12,10 +12,21 @@
 # $http_host              - IP for webservice to bind.
 # $http_port              - Port for webservice to bind.
 # $secret_key             - Secret key used for session hashing.
+# $app_blacklist          - Array of application names that Hue should not load.
+#                           Default: hbase, impala, search, spark, rdbms, zookeeper
 #
-# $oozie_url              - URL for Oozie API.  If cdh4::oozie is included,
+# $hive_server_host       - FQDN of host running hive-server2
+#
+# $oozie_url              - URL for Oozie API.  If cdh::oozie is included,
 #                           this will be inferred.  Else this will be disabled.
 # $oozie_security_enabled - Default: false.
+#
+# $proxy_whitelist        - Comma-separated regular expressions,
+#                           which match 'host:port' of requested proxy target.
+#                           Default: (localhost|127\.0\.0\.1):(50030|50070|50060|50075|8088|8042|19888|11001)
+# $proxy_blacklist        - Comma-separated regular expressions,
+#                           which match any prefix of 'host:port/path' of requested
+#                           proxy target.  Default: undef
 #
 # $smtp_host              - SMTP host for email notifications.
 #                           Default: undef, SMTP will not be configured.
@@ -49,45 +60,66 @@
 # $ldap_group_name_attr
 # $ldap_group_member_attr
 #
-class cdh4::hue(
-    $http_host                = $cdh4::hue::defaults::http_host,
-    $http_port                = $cdh4::hue::defaults::http_port,
-    $secret_key               = $cdh4::hue::defaults::secret_key,
+class cdh::hue(
+    $http_host                = $cdh::hue::defaults::http_host,
+    $http_port                = $cdh::hue::defaults::http_port,
+    $secret_key               = $cdh::hue::defaults::secret_key,
+    $app_blacklist            = $cdh::hue::defaults::app_blacklist,
 
-    $oozie_url                = $cdh4::hue::defaults::oozie_url,
-    $oozie_security_enabled   = $cdh4::hue::defaults::oozie_security_enabled,
+    $hive_server_host         = $cdh::hue::defaults::hive_server_host,
 
-    $smtp_host                = $cdh4::hue::defaults::smtp_host,
-    $smtp_port                = $cdh4::hue::defaults::smtp_port,
-    $smtp_user                = $cdh4::hue::defaults::smtp_user,
-    $smtp_password            = $cdh4::hue::defaults::smtp_password,
-    $smtp_from_email          = $cdh4::hue::defaults::smtp_from_email,
+    $oozie_url                = $cdh::hue::defaults::oozie_url,
+    $oozie_security_enabled   = $cdh::hue::defaults::oozie_security_enabled,
 
-    $httpfs_enabled           = $cdh4::hue::defaults::httpfs_enabled,
+    $proxy_whitelist          = $cdh::hue::defaults::proxy_whitelist,
+    $proxy_blacklist          = $cdh::hue::defaults::proxy_blacklist,
 
-    $ssl_private_key          = $cdh4::hue::defaults::ssl_private_key,
-    $ssl_certificate          = $cdh4::hue::defaults::ssl_certificate,
+    $smtp_host                = $cdh::hue::defaults::smtp_host,
+    $smtp_port                = $cdh::hue::defaults::smtp_port,
+    $smtp_user                = $cdh::hue::defaults::smtp_user,
+    $smtp_password            = $cdh::hue::defaults::smtp_password,
+    $smtp_from_email          = $cdh::hue::defaults::smtp_from_email,
 
-    $ldap_url                 = $cdh4::hue::defaults::ldap_url,
-    $ldap_cert                = $cdh4::hue::defaults::ldap_cert,
-    $ldap_nt_domain           = $cdh4::hue::defaults::ldap_nt_domain,
-    $ldap_bind_dn             = $cdh4::hue::defaults::ldap_bind_dn,
-    $ldap_base_dn             = $cdh4::hue::defaults::ldap_base_dn,
-    $ldap_bind_password       = $cdh4::hue::defaults::ldap_bind_password,
-    $ldap_username_pattern    = $cdh4::hue::defaults::ldap_username_pattern,
-    $ldap_user_filter         = $cdh4::hue::defaults::ldap_user_filter,
-    $ldap_user_name_attr      = $cdh4::hue::defaults::ldap_user_name_attr,
-    $ldap_group_filter        = $cdh4::hue::defaults::ldap_group_filter,
-    $ldap_group_name_attr     = $cdh4::hue::defaults::ldap_group_name_attr,
-    $ldap_group_member_attr   = $cdh4::hue::defaults::ldap_group_member_attr,
+    $ssl_private_key          = $cdh::hue::defaults::ssl_private_key,
+    $ssl_certificate          = $cdh::hue::defaults::ssl_certificate,
 
-    $hue_ini_template       = $cdh4::hue::defaults::hue_ini_template
-) inherits cdh4::hue::defaults
+    $ldap_url                 = $cdh::hue::defaults::ldap_url,
+    $ldap_cert                = $cdh::hue::defaults::ldap_cert,
+    $ldap_nt_domain           = $cdh::hue::defaults::ldap_nt_domain,
+    $ldap_bind_dn             = $cdh::hue::defaults::ldap_bind_dn,
+    $ldap_base_dn             = $cdh::hue::defaults::ldap_base_dn,
+    $ldap_bind_password       = $cdh::hue::defaults::ldap_bind_password,
+    $ldap_username_pattern    = $cdh::hue::defaults::ldap_username_pattern,
+    $ldap_user_filter         = $cdh::hue::defaults::ldap_user_filter,
+    $ldap_user_name_attr      = $cdh::hue::defaults::ldap_user_name_attr,
+    $ldap_group_filter        = $cdh::hue::defaults::ldap_group_filter,
+    $ldap_group_name_attr     = $cdh::hue::defaults::ldap_group_name_attr,
+    $ldap_group_member_attr   = $cdh::hue::defaults::ldap_group_member_attr,
+
+    $hue_ini_template         = $cdh::hue::defaults::hue_ini_template,
+    $hue_log4j_template       = $cdh::hue::defaults::hue_log4j_template,
+    $hue_log_conf_template    = $cdh::hue::defaults::hue_log_conf_template
+) inherits cdh::hue::defaults
 {
-    Class['cdh4::hadoop'] -> Class['cdh4::hue']
+    Class['cdh::hadoop'] -> Class['cdh::hue']
 
-    package { ['hue', 'hue-server']:
+    # If httpfs is enabled, the default httpfs port
+    # will be used, instead of the webhdfs port.
+    $httpfs_enabled = $cdh::hadoop::httpfs_enabled
+
+    package { 'hue':
         ensure => 'installed'
+    }
+
+    $config_directory = "/etc/hue/conf.${cdh::hadoop::cluster_name}"
+    # Create the $cluster_name based $config_directory.
+    file { $config_directory:
+        ensure  => 'directory',
+        require => Package['hue'],
+    }
+    cdh::alternative { 'hue-conf':
+        link    => '/etc/hue/conf',
+        path    => $config_directory,
     }
 
     # Managing the hue user here so we can add
@@ -96,14 +128,14 @@ class cdh4::hue(
     user { 'hue':
         gid        => 'hue',
         comment    => 'Hue daemon',
-        home       => '/usr/share/hue',
+        home       => '/usr/lib/hue',
         shell      => '/bin/false',
         managehome => false,
         system     => true,
-        require    => [Package['hue'], Package['hue-server']],
+        require    => Package['hue'],
     }
     # hive-site.xml might not be world readable.
-    if (defined(Class['cdh4::hive'])) {
+    if defined(Class['cdh::hive']) {
         # Below, if hive is enabled, the hue
         # user will be added to the hive group.
         # It isn't added here because Puppet only
@@ -111,8 +143,8 @@ class cdh4::hue(
         # and we might also have to add the ssl-cert group.
         $hive_enabled = true
 
-        # make sure cdh4::hive is applied before cdh4::hue.
-        Class['cdh4::hive']  -> Class['cdh4::hue']
+        # make sure cdh::hive is applied before cdh::hue.
+        Class['cdh::hive']  -> Class['cdh::hue']
 
         # Growl.  The packaged hue init.d script
         # has a bug where it doesn't --chuid to hue.
@@ -123,7 +155,7 @@ class cdh4::hue(
         # Cloudera fixes the problem.
         # See: https://issues.cloudera.org/browse/HUE-1398
         file { '/etc/init.d/hue':
-            source  => 'puppet:///modules/cdh4/hue/hue.init.d.sh',
+            source  => 'puppet:///modules/cdh/hue/hue.init.d.sh',
             mode    => '0755',
             owner   => 'root',
             group   => 'root',
@@ -162,8 +194,8 @@ class cdh4::hue(
 
         # If the SSL settings are left at the defaults,
         # then generate a default self-signed certificate.
-        if (($ssl_private_key == $cdh4::hue::defaults::ssl_private_key) and
-            ($ssl_certificate == $cdh4::hue::defaults::ssl_certificate)) {
+        if (($ssl_private_key == $cdh::hue::defaults::ssl_private_key) and
+            ($ssl_certificate == $cdh::hue::defaults::ssl_certificate)) {
 
             exec { 'generate_hue_ssl_private_key':
                 command => "/usr/bin/openssl genrsa 2048 > ${ssl_private_key}",
@@ -217,20 +249,18 @@ class cdh4::hue(
         User['hue'] { groups +> $hue_groups }
     }
 
-    if (defined(Package['sqoop'])) {
-        $sqoop = 'sqoop'
-    }
-    elsif (defined(Package['sqoop2'])) {
-        $sqoop = 'sqoop2'
-    }
-    else {
-        $sqoop = false
-    }
-
-    $namenode_host = $::cdh4::hadoop::primary_namenode_host
-    file { '/etc/hue/hue.ini':
+    $namenode_host = $::cdh::hadoop::primary_namenode_host
+    file { "${config_directory}/hue.ini":
         content => template($hue_ini_template),
-        require => Package['hue-server'],
+        require => Package['hue'],
+    }
+    file { "${config_directory}/log4j.properties":
+        content => template($hue_log4j_template),
+        require => Package['hue'],
+    }
+    file { "${config_directory}/log.conf":
+        content => template($hue_log_conf_template),
+        require => Package['hue'],
     }
 
     service { 'hue':
@@ -238,7 +268,7 @@ class cdh4::hue(
         enable     => true,
         hasrestart => true,
         hasstatus  => true,
-        subscribe  => File['/etc/hue/hue.ini'],
-        require    => [Package['hue-server'], User['hue']],
+        subscribe  => File["${config_directory}/hue.ini"],
+        require    => [Package['hue'], User['hue']],
     }
 }

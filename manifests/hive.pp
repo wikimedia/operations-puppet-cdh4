@@ -1,8 +1,9 @@
-# == Class cdh4::hive
+# == Class cdh::hive
 #
 # Installs Hive packages (needed for Hive Client).
-# Use this in conjunction with cdh4::hive::master to install and set up a
+# Use this in conjunction with cdh::hive::master to install and set up a
 # Hive Server and Hive Metastore.
+# This also installs hive-hcatalog
 #
 # == Parameters
 # $metastore_host                - fqdn of the metastore host
@@ -25,6 +26,7 @@
 #                                  Only set these if your root user cannot issue database
 #                                  commands without a different username and password.
 #                                  Default: undef
+# $auxpath                       - Additional path to pass to hive.  Default: undef
 # $exec_parallel_thread_number   - Number of jobs at most can be executed in parallel.
 #                                  Set this to 0 to disable parallel execution.
 # $optimize_skewjoin             - Enable or disable skew join optimization.
@@ -44,41 +46,61 @@
 # $stats_dbconnectionstring      - Connection string for the database that stores
 #                                  temporary hive statistics.
 #                                  Default: jdbc:derby:;databaseName=TempStatsStore;create=true
-# $auxpath                       - Additional path to pass to hive
-#                                  Default: undef
 #
-class cdh4::hive(
+class cdh::hive(
     $metastore_host,
-    $zookeeper_hosts             = $cdh4::hive::defaults::zookeeper_hosts,
+    $zookeeper_hosts             = $cdh::hive::defaults::zookeeper_hosts,
 
-    $jdbc_database               = $cdh4::hive::defaults::jdbc_database,
-    $jdbc_username               = $cdh4::hive::defaults::jdbc_username,
-    $jdbc_password               = $cdh4::hive::defaults::jdbc_password,
-    $jdbc_host                   = $cdh4::hive::defaults::jdbc_host,
-    $jdbc_port                   = $cdh4::hive::defaults::jdbc_port,
-    $jdbc_driver                 = $cdh4::hive::defaults::jdbc_driver,
-    $jdbc_protocol               = $cdh4::hive::defaults::jdbc_protocol,
+    $jdbc_database               = $cdh::hive::defaults::jdbc_database,
+    $jdbc_username               = $cdh::hive::defaults::jdbc_username,
+    $jdbc_password               = $cdh::hive::defaults::jdbc_password,
+    $jdbc_host                   = $cdh::hive::defaults::jdbc_host,
+    $jdbc_port                   = $cdh::hive::defaults::jdbc_port,
+    $jdbc_driver                 = $cdh::hive::defaults::jdbc_driver,
+    $jdbc_protocol               = $cdh::hive::defaults::jdbc_protocol,
 
-    $db_root_username            = $cdh4::hive::defaults::db_root_username,
-    $db_root_password            = $cdh4::hive::defaults::db_root_password,
+    $db_root_username            = $cdh::hive::defaults::db_root_username,
+    $db_root_password            = $cdh::hive::defaults::db_root_password,
 
-    $exec_parallel_thread_number = $cdh4::hive::defaults::exec_parallel_thread_number,
-    $optimize_skewjoin           = $cdh4::hive::defaults::optimize_skewjoin,
-    $skewjoin_key                = $cdh4::hive::defaults::skewjoin_key,
-    $skewjoin_mapjoin_map_tasks  = $cdh4::hive::defaults::skewjoin_mapjoin_map_tasks,
+    $auxpath                     = $cdh::hive::defaults::auxpath,
 
-    $stats_enabled               = $cdh4::hive::defaults::stats_enabled,
-    $stats_dbclass               = $cdh4::hive::defaults::stats_dbclass,
-    $stats_jdbcdriver            = $cdh4::hive::defaults::stats_jdbcdriver,
-    $stats_dbconnectionstring    = $cdh4::hive::defaults::stats_dbconnectionstring,
+    $exec_parallel_thread_number = $cdh::hive::defaults::exec_parallel_thread_number,
+    $optimize_skewjoin           = $cdh::hive::defaults::optimize_skewjoin,
+    $skewjoin_key                = $cdh::hive::defaults::skewjoin_key,
+    $skewjoin_mapjoin_map_tasks  = $cdh::hive::defaults::skewjoin_mapjoin_map_tasks,
 
-    $hive_site_template          = $cdh4::hive::defaults::hive_site_template,
-    $hive_exec_log4j_template    = $cdh4::hive::defaults::hive_exec_log4j_template,
-    $auxpath                     = $cdh4::hive::defaults::auxpath
-) inherits cdh4::hive::defaults
+    $stats_enabled               = $cdh::hive::defaults::stats_enabled,
+    $stats_dbclass               = $cdh::hive::defaults::stats_dbclass,
+    $stats_jdbcdriver            = $cdh::hive::defaults::stats_jdbcdriver,
+    $stats_dbconnectionstring    = $cdh::hive::defaults::stats_dbconnectionstring,
+
+    $hive_site_template          = $cdh::hive::defaults::hive_site_template,
+    $hive_log4j_template         = $cdh::hive::defaults::hive_log4j_template,
+    $hive_exec_log4j_template    = $cdh::hive::defaults::hive_exec_log4j_template
+) inherits cdh::hive::defaults
 {
+    Class['cdh::hadoop'] -> Class['cdh::hive']
+
     package { 'hive':
         ensure => 'installed',
+    }
+    $config_directory = "/etc/hive/conf.${cdh::hadoop::cluster_name}"
+    # Create the $cluster_name based $config_directory.
+    file { $config_directory:
+        ensure  => 'directory',
+        require => Package['hive'],
+    }
+    cdh::alternative { 'hive-conf':
+        link    => '/etc/hive/conf',
+        path    => $config_directory,
+    }
+
+    # If we need more hcatalog services
+    # (e.g. webhcat), this may be moved
+    # to a class of its own.
+    package { 'hive-hcatalog':
+        ensure  => 'installed',
+        require => Package['hive'],
     }
 
     # Make sure hive-site.xml is not world readable on the
@@ -88,14 +110,19 @@ class cdh4::hive(
         $::fqdn => '0440',
         default => '0444',
     }
-    file { '/etc/hive/conf/hive-site.xml':
+    file { "${config_directory}/hive-site.xml":
         content => template($hive_site_template),
         mode    => $hive_site_mode,
         owner   => 'hive',
         group   => 'hive',
         require => Package['hive'],
     }
-    file { '/etc/hive/conf/hive-exec-log4j.properties':
+    file { "${config_directory}/hive-log4j.properties":
+        content => template($hive_log4j_template),
+        require => Package['hive'],
+    }
+    file { "${config_directory}/hive-exec-log4j.properties":
         content => template($hive_exec_log4j_template),
+        require => Package['hive'],
     }
 }

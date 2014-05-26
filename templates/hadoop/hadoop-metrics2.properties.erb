@@ -27,13 +27,8 @@ ganglia_hosts_string = ganglia_hosts.sort.join(',')
 namenode.sink.ganglia.servers=<%= ganglia_hosts_string %>
 datanode.sink.ganglia.servers=<%= ganglia_hosts_string %>
 
-<% if use_yarn -%>
 resourcemanager.sink.ganglia.servers=<%= ganglia_hosts_string %>
 nodemanager.sink.ganglia.servers=<%= ganglia_hosts_string %>
-<% else -%>
-jobtracker.sink.ganglia.servers=<%= ganglia_hosts_string %>
-tasktracker.sink.ganglia.servers=<%= ganglia_hosts_string %>
-<% end -%>
 
 maptask.sink.ganglia.servers=<%= ganglia_hosts_string %>
 reducetask.sink.ganglia.servers=<%= ganglia_hosts_string %>

@@ -62,6 +62,11 @@ if (@metastore_host == @fqdn)
     <value>true</value>
   </property>
 
+  <property>
+    <name>datanucleus.autoStartMechanism</name> 
+    <value>SchemaTable</value>
+  </property>
+
 <% end -%>
 <% if @zookeeper_hosts -%>
   <!-- Hive can use Zookeeper for table lock management -->
@@ -78,6 +83,14 @@ if (@metastore_host == @fqdn)
   </property>
 <% end -%>
 
+  <property>
+    <name>hive.metastore.execute.setugi</name>
+    <value>true</value>
+    <description>
+      In unsecure mode, setting this property to true will cause the metastore
+      to execute DFS operations using the client's reported user and group permissions.
+    </description>
+  </property>
 
   <!-- Hive Execution Parameters -->
   <property>

@@ -41,8 +41,8 @@
     </property>
 
     <property>
-        <name>oozie.service.AuthorizationService.security.enabled</name>
-        <value><%= @authorization_service_security_enabled %></value>
+        <name>oozie.service.AuthorizationService.authorization.enabled</name>
+        <value><%= @authorization_service_authorization_enabled %></value>
         <description>
             Specifies whether security (user name/admin role) is enabled or not.
             If disabled any user can manage Oozie system and manage any job.
@@ -357,42 +357,40 @@
 
     -->
 
-
     <!-- Allow root, hdfs and hue users to -doas any user -->
     <property>
         <name>oozie.service.ProxyUserService.proxyuser.root.hosts</name>
         <value>*</value>
     </property>
-
     <property>
         <name>oozie.service.ProxyUserService.proxyuser.root.groups</name>
         <value>*</value>
     </property>
+
     <property>
         <name>oozie.service.ProxyUserService.proxyuser.hdfs.hosts</name>
         <value>*</value>
     </property>
-
     <property>
         <name>oozie.service.ProxyUserService.proxyuser.hdfs.groups</name>
         <value>*</value>
     </property>
+
     <property>
         <name>oozie.service.ProxyUserService.proxyuser.hue.hosts</name>
         <value>*</value>
     </property>
-
     <property>
         <name>oozie.service.ProxyUserService.proxyuser.hue.groups</name>
         <value>*</value>
     </property>
-    
+
     <!-- enable uber jars -->
     <property>
          <name>oozie.action.mapreduce.uber.jar.enable</name>
          <value>true</value>
     </property>
-    
+
 <% if @smtp_host -%>
     <!-- smtp email configuration -->
     <property>

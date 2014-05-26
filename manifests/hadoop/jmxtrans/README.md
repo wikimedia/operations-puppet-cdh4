@@ -14,14 +14,14 @@ service's metrics to Ganglia.
 On your Hadoop master node:
 
 ```puppet
-class { 'cdh4::hadoop::jmxtrans::master':
+class { 'cdh::hadoop::jmxtrans::master':
     ganglia => 'ganglia.example.com',
 }
 ```
 
 On your Hadoop worker nodes:
 ```puppet
-class { 'cdh4::hadoop::jmxtrans::worker':
+class { 'cdh::hadoop::jmxtrans::worker':
     ganglia => 'ganglia.example.com',
 }
 ```

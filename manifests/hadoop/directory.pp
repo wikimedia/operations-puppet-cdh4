@@ -1,4 +1,4 @@
-# == Define cdh4::hadoop::directory
+# == Define cdh::hadoop::directory
 #
 # Creates or removes a directory in HDFS.
 #
@@ -27,24 +27,24 @@
 # $group  - HDFS directory group owner. Default: hdfs
 # $mode   - HDFS diretory mode.  Default 0755
 #
-define cdh4::hadoop::directory (
+define cdh::hadoop::directory (
     $path   = $title,
     $ensure = 'present',
     $owner  = 'hdfs',
     $group  = 'hdfs',
     $mode   = '0755')
 {
-    Class['cdh4::hadoop'] -> Cdh4::Hadoop::Directory[$title]
+    Class['cdh::hadoop'] -> Cdh::Hadoop::Directory[$title]
 
     if $ensure == 'present' {
-        exec { "cdh4::hadoop::directory ${title}":
+        exec { "cdh::hadoop::directory ${title}":
             command => "/usr/bin/hadoop fs -mkdir ${path} && /usr/bin/hadoop fs -chmod ${mode} ${path} && /usr/bin/hadoop fs -chown ${owner}:${group} ${path}",
             unless  => "/usr/bin/hadoop fs -test -e ${path}",
             user    => 'hdfs',
         }
     }
     else {
-        exec { "cdh4::hadoop::directory ${title}":
+        exec { "cdh::hadoop::directory ${title}":
             command => "/usr/bin/hadoop fs -rm -R ${path}",
             onlyif  => "/usr/bin/hadoop fs -test -e ${path}",
             user    => 'hdfs',

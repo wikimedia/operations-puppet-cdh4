@@ -8,7 +8,7 @@
 <configuration>
 
   <property>
-    <name><%= @use_yarn ? 'fs.defaultFS' : 'fs.default.name' %></name>
+    <name>fs.defaultFS</name>
     <value>hdfs://<%= @ha_enabled ? @nameservice_id : @primary_namenode_host %>/</value>
   </property>
 
@@ -19,12 +19,8 @@
   </property>
 <% end -%>
 
-<% if enable_webhdfs -%>
-<% # NOTE: There might be a better way to
-   # conditionally set this rather than relying
-   # the enable_webhdfs setting.  This will do for now.
--%>
-  <!-- Hue WebHDFS proxy user -->
+<% if @webhdfs_enabled or @httpfs_enabled -%>
+  <!-- Hue proxy user -->
   <property>
     <name>hadoop.proxyuser.hue.hosts</name>
     <value>*</value>
@@ -34,7 +30,7 @@
     <value>*</value>
   </property>
 
-  <!-- Oozie WebHDFS proxy user -->
+  <!-- Oozie proxy user -->
   <property>
     <name>hadoop.proxyuser.oozie.hosts</name>
     <value>*</value>
@@ -44,6 +40,27 @@
     <value>*</value>
   </property>
 <% end -%>
+
+<% if @httpfs_enabled -%>
+  <property>
+    <name>hadoop.proxyuser.httpfs.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.httpfs.groups</name>
+    <value>*</value>
+  </property>
+<% end -%>
+
+  <!-- mapred proxy user -->
+  <property>
+    <name>hadoop.proxyuser.mapred.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.mapred.groups</name>
+    <value>*</value>
+  </property>
 
 <% if @net_topology_script_template -%>
   <!-- Script used to map nodes to rack or rows in datacenter. -->
