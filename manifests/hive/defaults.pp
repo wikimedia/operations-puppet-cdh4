@@ -32,4 +32,8 @@ class cdh4::hive::defaults {
     # module yet supports.
     $hive_site_template          = 'cdh4/hive/hive-site.xml.erb'
     $hive_exec_log4j_template    = 'cdh4/hive/hive-exec-log4j.properties.erb'
+
+    # Further path/jar to add to hive's classpath
+    # (Until Hive 0.12.0 this can only be a single path (see HIVE-2269 )
+    $auxpath                     = undef
 }

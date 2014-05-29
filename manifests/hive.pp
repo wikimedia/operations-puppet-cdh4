@@ -44,6 +44,8 @@
 # $stats_dbconnectionstring      - Connection string for the database that stores
 #                                  temporary hive statistics.
 #                                  Default: jdbc:derby:;databaseName=TempStatsStore;create=true
+# $auxpath                       - Additional path to pass to hive
+#                                  Default: undef
 #
 class cdh4::hive(
     $metastore_host,
@@ -71,7 +73,8 @@ class cdh4::hive(
     $stats_dbconnectionstring    = $cdh4::hive::defaults::stats_dbconnectionstring,
 
     $hive_site_template          = $cdh4::hive::defaults::hive_site_template,
-    $hive_exec_log4j_template    = $cdh4::hive::defaults::hive_exec_log4j_template
+    $hive_exec_log4j_template    = $cdh4::hive::defaults::hive_exec_log4j_template,
+    $auxpath                     = $cdh4::hive::defaults::auxpath
 ) inherits cdh4::hive::defaults
 {
     package { 'hive':
