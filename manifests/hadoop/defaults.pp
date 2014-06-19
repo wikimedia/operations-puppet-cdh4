@@ -38,6 +38,9 @@ class cdh4::hadoop::defaults {
     $use_yarn                                 = true
     $ganglia_hosts                            = undef
     $net_topology_script_template             = undef
+    $gelf_logging_enabled                     = false
+    $gelf_logging_host                        = 'localhost'
+    $gelf_logging_port                        = 12201
 
 
     # JMX Ports (These are not currently configurable)

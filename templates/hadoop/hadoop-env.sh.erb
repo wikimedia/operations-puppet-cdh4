@@ -11,8 +11,28 @@ export HADOOP_MAPRED_HOME=/usr/lib/hadoop-0.20-mapreduce
 # Enable NameNode JMX connections on port <%= namenode_jmxremote_port %>
 HADOOP_NAMENODE_OPTS="-Dcom.sun.management.jmxremote.port=<%= namenode_jmxremote_port %> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
 <% end -%>
+<% if @gelf_logging_enabled -%>
+<%# For logging to logstash via gelf, per http://www.paluch.biz/blog/95-logging-hadoop-messages-into-logstash-using-logstash-gelf.html -%>
+<%# in the example this is the only HADOOP_*_OPTS var which is exported, is this deviance needed? -%>
+<%# example: export HADOOP_NAMENODE_OPTS="-Dhadoop.security.logger=INFO,DRFAS,gelf -Dhdfs.audit.logger=INFO,DRFAAUDIT,gelf $HADOOP_NAMENODE_OPTS" -%>
+export HADOOP_NAMENODE_OPTS="-Dhadoop.security.logger=INFO,gelf -Dhdfs.audit.logger=INFO,gelf $HADOOP_NAMENODE_OPTS"
+<% end -%>
 
 <% if @datanode_jmxremote_port -%>
 # Enable DateNode JMX connections on port <%= datanode_jmxremote_port %>
 HADOOP_DATANODE_OPTS="-Dcom.sun.management.jmxremote.port=<%= datanode_jmxremote_port %> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
+<% end -%>
+<% if @gelf_logging_enabled -%>
+<%# The example sets the default level to ERROR even though they do INFO for NAMENODE, interesting. -%>
+<%# example: HADOOP_DATANODE_OPTS="-Dhadoop.security.logger=ERROR,DRFAS,gelf $HADOOP_DATANODE_OPTS" -%>
+HADOOP_DATANODE_OPTS="-Dhadoop.security.logger=INFO,gelf $HADOOP_DATANODE_OPTS"
+
+<%# example: export YARN_ROOT_LOGGER=INFO,DRFA,gelf -%>
+export YARN_ROOT_LOGGER=INFO,gelf
+<%# example: export HADOOP_ROOT_LOGGER=INFO,DRFA,gelf -%>
+export HADOOP_ROOT_LOGGER=INFO,gelf
+<%# example: export HADOOP_JHS_LOGGER=INFO,JSA,gelf -%>
+export HADOOP_JHS_LOGGER=INFO,gelf
+<%# example: export HADOOP_ROOT_SECURITY_LOGGER=INFO,DRFAS,gelf -%>
+export HADOOP_ROOT_SECURITY_LOGGER=INFO,gelf
 <% end -%>

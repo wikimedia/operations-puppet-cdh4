@@ -68,6 +68,11 @@
 #   $net_topology_script_template             - Puppet ERb template path  to script that will be
 #                                               invoked to resolve node names to row or rack assignments.
 #                                               Default: undef
+#   $gelf_logging_enabled                     - Set this to true in order to configure GELF logging output, for Logstash
+#                                             - Needs: libjson-simple-java (Debian package)
+#                                             - Needs: logstash-gelf.jar (https://github.com/mp911de/logstash-gelf/releases)
+#   $gelf_logging_host                        - Destination host for GELF output. Default is localhost.
+#   $gelf_logging_port                        - Destination port for GELF output. Default is 12201.
 #
 class cdh4::hadoop(
     $namenode_hosts,
@@ -109,7 +114,10 @@ class cdh4::hadoop(
     $yarn_resourcemanager_scheduler_class        = $::cdh4::hadoop::defaults::yarn_resourcemanager_scheduler_class,
     $use_yarn                                    = $::cdh4::hadoop::defaults::use_yarn,
     $ganglia_hosts                               = $::cdh4::hadoop::defaults::ganglia_hosts,
-    $net_topology_script_template                = $::cdh4::hadoop::defaults::net_topology_script_template
+    $net_topology_script_template                = $::cdh4::hadoop::defaults::net_topology_script_template,
+    $gelf_logging_enabled                        = $::cdh4::hadoop::defaults::gelf_logging_enabled,
+    $gelf_logging_host                           = $::cdh4::hadoop::defaults::gelf_logging_host,
+    $gelf_logging_port                           = $::cdh4::hadoop::defaults::gelf_logging_port,
 ) inherits cdh4::hadoop::defaults
 {
     # If $dfs_name_dir is a list, this will be the
