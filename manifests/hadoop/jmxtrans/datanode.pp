@@ -86,7 +86,7 @@ class cdh::hadoop::jmxtrans::datanode(
                     'WriteBlockOpNumOps'                         => { 'slope' => 'positive' },
                     'WritesFromLocalClient'                      => { 'slope' => 'both' },
                     'WritesFromRemoteClient'                     => { 'slope' => 'both' },
-                 },
+                },
             },
 
             {
@@ -155,7 +155,7 @@ class cdh::hadoop::jmxtrans::datanode(
                     'InitReplicaRecoveryNumOps'                 => { 'slope' => 'positive' },
                     'UpdateReplicaUnderRecoveryAvgTime'         => { 'slope' => 'both' },
                     'UpdateReplicaUnderRecoveryNumOps'          => { 'slope' => 'positive' },
-               },
+                },
             },
         ],
         # else use $objects
